@@ -1,0 +1,110 @@
+{
+  "Socios": [
+    {
+      "Id": 1,
+      "Nombre": "Ana Torres"
+    },
+    {
+      "Id": 2,
+      "Nombre": "Luis Mina"
+    }
+  ],
+  "Cuentas": [
+    {
+      "tipo": "ahorro",
+      "Numero": 101,
+      "SocioId": 1,
+      "Saldo": 80.27,
+      "Activa": true,
+      "Apertura": "2026-10-01"
+    },
+    {
+      "tipo": "corriente",
+      "Numero": 102,
+      "SocioId": 1,
+      "Saldo": -30,
+      "Activa": true,
+      "Apertura": "2026-10-01"
+    },
+    {
+      "tipo": "ahorro",
+      "Numero": 201,
+      "SocioId": 2,
+      "Saldo": 301.00,
+      "Activa": true,
+      "Apertura": "2026-10-01"
+    }
+  ],
+  "Movimientos": [
+    {
+      "Id": 1,
+      "CuentaNumero": 101,
+      "Fecha": "2026-10-01",
+      "Tipo": "Deposito",
+      "Monto": 100,
+      "SaldoPosterior": 100,
+      "Detalle": "",
+      "TransferenciaId": null
+    },
+    {
+      "Id": 2,
+      "CuentaNumero": 201,
+      "Fecha": "2026-10-01",
+      "Tipo": "Deposito",
+      "Monto": 300,
+      "SaldoPosterior": 300,
+      "Detalle": "",
+      "TransferenciaId": null
+    },
+    {
+      "Id": 3,
+      "CuentaNumero": 101,
+      "Fecha": "2026-10-02",
+      "Tipo": "Retiro",
+      "Monto": 20,
+      "SaldoPosterior": 80,
+      "Detalle": "Transferencia a 102",
+      "TransferenciaId": "6e4d5461f67e45838d859761978328bd"
+    },
+    {
+      "Id": 4,
+      "CuentaNumero": 102,
+      "Fecha": "2026-10-02",
+      "Tipo": "Deposito",
+      "Monto": 20,
+      "SaldoPosterior": 20,
+      "Detalle": "Transferencia desde 101",
+      "TransferenciaId": "6e4d5461f67e45838d859761978328bd"
+    },
+    {
+      "Id": 5,
+      "CuentaNumero": 102,
+      "Fecha": "2026-10-03",
+      "Tipo": "Retiro",
+      "Monto": 50,
+      "SaldoPosterior": -30,
+      "Detalle": "",
+      "TransferenciaId": null
+    },
+    {
+      "Id": 6,
+      "CuentaNumero": 101,
+      "Fecha": "2026-10-31",
+      "Tipo": "Interes",
+      "Monto": 0.27,
+      "SaldoPosterior": 80.27,
+      "Detalle": "Interes 2026-10",
+      "TransferenciaId": null
+    },
+    {
+      "Id": 7,
+      "CuentaNumero": 201,
+      "Fecha": "2026-10-31",
+      "Tipo": "Interes",
+      "Monto": 1.00,
+      "SaldoPosterior": 301.00,
+      "Detalle": "Interes 2026-10",
+      "TransferenciaId": null
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+COOPERATIVA DE AHORRO Y CREDITO - IMBABURA
+Archivo: C:\Users\anz\source\repos\Tr1-BDD-CSharp\datos-prueba\Ejercicio02_CooperativaAhorro\cooperativa-ejemplo.json
+
+1. Registrar socio  2. Abrir cuenta  3. Listar socios y cuentas
+4. Depositar  5. Retirar  6. Transferir  7. Aplicar intereses del mes
+8. Cerrar cuenta  9. Reportes  0. Salir
+Opcion: Socio 1: Ana Torres
+Socio 2: Luis Mina
+Cuenta 101 | CuentaAhorro | Socio 1 | Saldo 80,27 | Activa: True
+Cuenta 102 | CuentaCorriente | Socio 1 | Saldo -30,00 | Activa: True
+Cuenta 201 | CuentaAhorro | Socio 2 | Saldo 301,00 | Activa: True
+Operacion terminada.
+
+1. Registrar socio  2. Abrir cuenta  3. Listar socios y cuentas
+4. Depositar  5. Retirar  6. Transferir  7. Aplicar intereses del mes
+8. Cerrar cuenta  9. Reportes  0. Salir
+Opcion: 1. Estado de cuenta  2. Intereses del mes  3. Sobregiros  4. Totales del periodo  5. Auditoria
+Reporte: Cuenta: ID | Fecha | Tipo | Monto | Saldo posterior | Detalle
+1 | 2026-10-01 | Deposito | 100,00 | 100,00 |
+3 | 2026-10-02 | Retiro | 20,00 | 80,00 | Transferencia a 102
+6 | 2026-10-31 | Interes | 0,27 | 80,27 | Interes 2026-10
+Saldo actual: 80,27
+Operacion terminada.
+
+1. Registrar socio  2. Abrir cuenta  3. Listar socios y cuentas
+4. Depositar  5. Retirar  6. Transferir  7. Aplicar intereses del mes
+8. Cerrar cuenta  9. Reportes  0. Salir
+Opcion: 1. Estado de cuenta  2. Intereses del mes  3. Sobregiros  4. Totales del periodo  5. Auditoria
+Reporte: Anio: Mes: Cuenta 101 | Base 80,00 | Calculado 0,27 | Acreditado 0,27 | Aplicado: True
+Cuenta 201 | Base 300,00 | Calculado 1,00 | Acreditado 1,00 | Aplicado: True
+Operacion terminada.
+
+1. Registrar socio  2. Abrir cuenta  3. Listar socios y cuentas
+4. Depositar  5. Retirar  6. Transferir  7. Aplicar intereses del mes
+8. Cerrar cuenta  9. Reportes  0. Salir
+Opcion: 1. Estado de cuenta  2. Intereses del mes  3. Sobregiros  4. Totales del periodo  5. Auditoria
+Reporte: Cuenta 102 | Socio 1 | Saldo -30,00
+Operacion terminada.
+
+1. Registrar socio  2. Abrir cuenta  3. Listar socios y cuentas
+4. Depositar  5. Retirar  6. Transferir  7. Aplicar intereses del mes
+8. Cerrar cuenta  9. Reportes  0. Salir
+Opcion: 1. Estado de cuenta  2. Intereses del mes  3. Sobregiros  4. Totales del periodo  5. Auditoria
+Reporte: Desde (aaaa-mm-dd): Hasta (aaaa-mm-dd): Depositado: 420,00 | Retirado: 70,00
+Operacion terminada.
+
+1. Registrar socio  2. Abrir cuenta  3. Listar socios y cuentas
+4. Depositar  5. Retirar  6. Transferir  7. Aplicar intereses del mes
+8. Cerrar cuenta  9. Reportes  0. Salir
+Opcion: 1. Estado de cuenta  2. Intereses del mes  3. Sobregiros  4. Totales del periodo  5. Auditoria
+Reporte: Cuenta 101 | Guardado 80,27 | Calculado 80,27 | Correcta: True
+Cuenta 102 | Guardado -30,00 | Calculado -30,00 | Correcta: True
+Cuenta 201 | Guardado 301,00 | Calculado 301,00 | Correcta: True
+Operacion terminada.
+
+1. Registrar socio  2. Abrir cuenta  3. Listar socios y cuentas
+4. Depositar  5. Retirar  6. Transferir  7. Aplicar intereses del mes
+8. Cerrar cuenta  9. Reportes  0. Salir
+Opcion:

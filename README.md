@@ -1,6 +1,6 @@
 # Trabajo 1 - Bases de Datos
 
-Una solucion con cinco proyectos de consola C# independientes. Solo se ha preparado la estructura; los ejercicios, la persistencia, los reportes y las pruebas estan pendientes de implementar por el grupo.
+Una solucion con cinco proyectos de consola C# independientes. El ejercicio 2 (Cooperativa de ahorro) esta implementado con persistencia JSON, cinco reportes y pruebas reproducibles. Los ejercicios 1, 3, 4 y 5 conservan su estructura inicial y estan pendientes.
 
 ## Requisitos
 
@@ -25,7 +25,7 @@ dotnet run --project src/Ejercicio04_Cafeteria
 dotnet run --project src/Ejercicio05_Artesanias
 ```
 
-Cada comando ejecuta un proyecto distinto. Por ahora solo muestra un mensaje indicando que falta implementarlo.
+Cada comando ejecuta un proyecto distinto. El ejercicio 2 abre el menu de la cooperativa; los otros cuatro muestran un mensaje de implementacion pendiente.
 
 En Visual Studio, abrir `Tr1-BDD-CSharp.sln`, hacer clic derecho sobre el proyecto deseado y seleccionar **Establecer como proyecto de inicio**.
 
@@ -49,9 +49,23 @@ Los proyectos no dependen entre si. Cada integrante puede desarrollar el ejercic
 | `README.md` | Instrucciones de compilacion y ejecucion exigidas en la entrega. El diagrama de clases debe agregarse cuando se disenen las clases. |
 | `.gitignore` | Evita subir archivos locales de Visual Studio y resultados de compilacion. |
 | `datos-prueba/` | Archivos de datos consistentes exigidos por el enunciado. |
-| `pruebas/` | Espacio para registrar los casos y resultados reales que luego iran en el informe; no contiene proyectos de pruebas automatizadas por ahora. |
+| `pruebas/` | Espacio para registrar los casos y resultados reales que luego iran en el informe; incluye el programa de pruebas automatizadas de consola del ejercicio 2. |
 | `documentacion/` | Espacio para los diagramas de clases y el informe con la bitacora de IA. |
 
 Los nombres de las carpetas son una decision de organizacion del grupo; el enunciado exige los entregables, no estos nombres concretos. Se mantienen para que cada integrante sepa donde colocar su trabajo.
 
 Las carpetas vacias se conservan en Git mediante archivos `.gitkeep`, que no contienen codigo. Las carpetas internas de cada proyecto son una guia inicial y pueden adaptarse durante el desarrollo.
+
+## Ejercicio 2 implementado
+
+- [Instrucciones, decisiones y diagrama de clases](src/Ejercicio02_CooperativaAhorro/README.md#diagrama-de-clases).
+- [Datos de prueba](datos-prueba/Ejercicio02_CooperativaAhorro/cooperativa-ejemplo.json).
+- [Resultados reales de las pruebas](pruebas/Ejercicio02_CooperativaAhorro/RESULTADOS.md).
+- [Informe del aporte](documentacion/informe/Arevalo-Bustamante-Tr1-Ejercicio02.pdf).
+- [Bitacora de IA](documentacion/informe/Bitacora-IA-Ejercicio02.md).
+
+```powershell
+dotnet run --project pruebas/Ejercicio02_CooperativaAhorro -- pruebas/Ejercicio02_CooperativaAhorro/RESULTADOS.md
+```
+
+La solucion contiene cinco aplicaciones de ejercicios y un proyecto adicional para las pruebas del ejercicio 2. El informe grupal final y los aportes de los demas integrantes siguen pendientes.

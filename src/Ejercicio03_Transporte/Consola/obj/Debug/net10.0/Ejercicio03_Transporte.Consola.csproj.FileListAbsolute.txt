@@ -1,0 +1,15 @@
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net10.0\Ejercicio03_Transporte.Consola.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net10.0\Ejercicio03_Transporte.Consola.AssemblyInfoInputs.cache
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net10.0\Ejercicio03_Transporte.Consola.AssemblyInfo.cs
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net10.0\Ejercicio03_Transporte.Consola.csproj.CoreCompileInputs.cache
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\bin\Debug\net10.0\Ejercicio03_Transporte.Consola.exe
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\bin\Debug\net10.0\Ejercicio03_Transporte.Consola.deps.json
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\bin\Debug\net10.0\Ejercicio03_Transporte.Consola.runtimeconfig.json
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\bin\Debug\net10.0\Ejercicio03_Transporte.Consola.dll
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\bin\Debug\net10.0\Ejercicio03_Transporte.Consola.pdb
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net10.0\Ejercicio03_Transporte.Consola.dll
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net10.0\refint\Ejercicio03_Transporte.Consola.dll
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net10.0\Ejercicio03_Transporte.Consola.pdb
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net10.0\Ejercicio03_Transporte.Consola.genruntimeconfig.cache
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net10.0\ref\Ejercicio03_Transporte.Consola.dll
+C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net10.0\Ejercici.795ABA11.Up2Date

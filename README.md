@@ -61,6 +61,7 @@ Las carpetas vacias se conservan en Git mediante archivos `.gitkeep`, que no con
 - [Instrucciones](src/Ejercicio01_Biblioteca/README.md).
 - [Diagrama de clases](documentacion/diagramas-de-clases/Ejercicio01.md).
 - [Diagrama visual](documentacion/diagramas-de-clases/Ejercicio01.html).
+- [Diagrama editable en PowerDesigner](documentacion/diagramas-de-clases/Biblioteca-Ejercicio01.oom).
 - [Datos de ejemplo](datos-prueba/Ejercicio01_Biblioteca/ejemplo.json).
 - [Informe y bitacora de IA](documentacion/informe/Informe-Ejercicio01.md).
 - [Resultados reales de pruebas](documentacion/informe/Pruebas-Ejercicio01.md).

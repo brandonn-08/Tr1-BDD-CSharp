@@ -36,7 +36,7 @@ El reporte de multas usa la **fecha de devolución**, porque es cuando se conoce
 
 ## Pruebas realizadas
 
-Primero se compiló `src/Ejercicio01_Biblioteca/Ejercicio01_Biblioteca.csproj`: el resultado fue **0 errores y 0 advertencias**. Después se ejecutó `python pruebas/Ejercicio01_Biblioteca/verificar.py` desde la raíz del repositorio. La prueba envía opciones al menú y usa archivos JSON temporales separados de los datos normales. Las fechas se calculan a partir del día de ejecución, de modo que los casos de retraso se puedan repetir otro día.
+Primero se compiló `src/Ejercicio01_Biblioteca/Ejercicio01_Biblioteca.csproj`: el resultado fue **0 errores y 0 advertencias**. Después se ejecutó `dotnet run --project pruebas/Ejercicio01_Biblioteca/PruebasBiblioteca.csproj` desde la raíz del repositorio. La prueba está escrita en C#, envía opciones al menú y usa archivos JSON temporales separados de los datos normales. Las fechas se calculan a partir del día de ejecución, de modo que los casos de retraso se puedan repetir otro día.
 
 | Caso | Resultado esperado | Resultado observado |
 | --- | --- | --- |
@@ -62,7 +62,7 @@ Desde la carpeta principal del repositorio:
 
 ```powershell
 dotnet build src/Ejercicio01_Biblioteca/Ejercicio01_Biblioteca.csproj
-python pruebas/Ejercicio01_Biblioteca/verificar.py
+dotnet run --project pruebas/Ejercicio01_Biblioteca/PruebasBiblioteca.csproj
 ```
 
 Para usar el programa manualmente: `dotnet run --project src/Ejercicio01_Biblioteca`. Los pasos básicos son registrar un usuario y un material, prestar un ejemplar y después consultar el listado o el historial. Las instrucciones de uso también están en el [README del ejercicio](../../src/Ejercicio01_Biblioteca/README.md).

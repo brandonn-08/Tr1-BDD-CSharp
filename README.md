@@ -64,10 +64,10 @@ Las carpetas vacias se conservan en Git mediante archivos `.gitkeep`, que no con
 - [Informe y bitacora de IA](documentacion/informe/Informe-Ejercicio01.md).
 - [Resultados reales de pruebas](documentacion/informe/Pruebas-Ejercicio01.md).
 
-Despues de compilar el ejercicio 1, se pueden repetir sus 13 pruebas con Python 3:
+Las 13 pruebas del ejercicio 1 se ejecutan en C# con .NET 10:
 
 ```text
-python pruebas/Ejercicio01_Biblioteca/verificar.py
+dotnet run --project pruebas/Ejercicio01_Biblioteca/PruebasBiblioteca.csproj
 ```
 
 ## Ejercicio 2 implementado
@@ -82,7 +82,7 @@ python pruebas/Ejercicio01_Biblioteca/verificar.py
 dotnet run --project pruebas/Ejercicio02_CooperativaAhorro -- pruebas/Ejercicio02_CooperativaAhorro/RESULTADOS.md
 ```
 
-La solucion contiene cinco aplicaciones de ejercicios y un proyecto adicional para las pruebas del ejercicio 2. El informe grupal final y los aportes de los demas integrantes siguen pendientes.
+La solución contiene cinco aplicaciones de ejercicios y proyectos de pruebas en C#. El informe grupal se prepara por separado para la entrega.
 
 ## Ejercicios 3 y 5: ejecucion y pruebas
 

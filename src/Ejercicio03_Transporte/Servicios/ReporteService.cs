@@ -13,6 +13,11 @@ namespace Ejercicio03_Transporte.Servicios
             _gestionService = gestionService;
         }
 
+        private static void ValidarPeriodo(DateTime inicio, DateTime fin)
+        {
+            if (inicio.Date > fin.Date) throw new ArgumentException("El periodo esta invertido.");
+        }
+
         // 1. Mapa de asientos de un viaje (con asientos ocupados y libres)
         public void GenerarMapaAsientos(string idViaje)
         {
@@ -44,8 +49,9 @@ namespace Ejercicio03_Transporte.Servicios
             Console.WriteLine($" RECAUDACIÓN POR RUTA ({fechaInicio.ToShortDateString()} - {fechaFin.ToShortDateString()})");
             Console.WriteLine($"========================================");
 
+            ValidarPeriodo(fechaInicio, fechaFin);
             var boletosValidos = _gestionService.Boletos
-                .Where(b => !b.EstaAnulado && b.FechaEmision >= fechaInicio && b.FechaEmision <= fechaFin);
+                .Where(b => !b.EstaAnulado && b.FechaEmision.Date >= fechaInicio.Date && b.FechaEmision.Date <= fechaFin.Date);
 
             var porRuta = boletosValidos
                 .Select(b => new { Boleto = b, Viaje = _gestionService.Viajes.FirstOrDefault(v => v.IdViaje == b.IdViaje) })
@@ -85,8 +91,9 @@ namespace Ejercicio03_Transporte.Servicios
             Console.WriteLine($" BOLETOS ANULADOS ({fechaInicio.ToShortDateString()} - {fechaFin.ToShortDateString()})");
             Console.WriteLine($"========================================");
 
+            ValidarPeriodo(fechaInicio, fechaFin);
             var anulados = _gestionService.Boletos
-                .Where(b => b.EstaAnulado && b.FechaAnulacion.HasValue && b.FechaAnulacion.Value >= fechaInicio && b.FechaAnulacion.Value <= fechaFin);
+                .Where(b => b.EstaAnulado && b.FechaAnulacion.HasValue && b.FechaAnulacion.Value.Date >= fechaInicio.Date && b.FechaAnulacion.Value.Date <= fechaFin.Date);
 
             int contador = 0;
             foreach (var b in anulados)
@@ -110,7 +117,10 @@ namespace Ejercicio03_Transporte.Servicios
 
             foreach (var v in _gestionService.Viajes)
             {
-                int asientosLibres = v.CapacidadAsientos - v.AsientosOcupados.Count;
+                var activos = _gestionService.Boletos.Where(b => b.IdViaje == v.IdViaje && !b.EstaAnulado).Select(b => b.NumeroAsiento).ToList();
+                bool correcto = activos.Count == activos.Distinct().Count() && activos.All(a => a >= 1 && a <= v.CapacidadAsientos) && v.AsientosOcupados.Order().SequenceEqual(activos.Order());
+                Console.WriteLine(correcto ? "CORRECTO" : "INCONSISTENCIA: revisar boletos y asientos guardados");
+                int asientosLibres = v.CapacidadAsientos - activos.Count;
                 Console.WriteLine($"Viaje {v.IdViaje} | Ruta: {v.Origen} -> {v.Destino} | Total Asientos: {v.CapacidadAsientos} | Libres: {asientosLibres} | Ocupados: {v.AsientosOcupados.Count}");
             }
         }

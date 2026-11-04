@@ -1,4 +1,4 @@
-﻿using Ejercicio05_Artesanias.Modelos;
+using Ejercicio05_Artesanias.Modelos;
 using Ejercicio05_Artesanias.Persistencia;
 
 namespace Ejercicio05_Artesanias.Servicios;
@@ -16,33 +16,36 @@ public class ComunidadService
 
     public void Registrar(string nombre, string descripcion)
     {
-        if (string.IsNullOrWhiteSpace(nombre))
+        _repositorio.EjecutarCambio(_datos, () =>
         {
-            throw new ArgumentException(
-                "El nombre de la comunidad es obligatorio."
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                throw new ArgumentException(
+                    "El nombre de la comunidad es obligatorio."
+                );
+            }
+
+            bool existe = _datos.Comunidades.Any(c =>
+                c.Nombre.Equals(nombre.Trim(), StringComparison.OrdinalIgnoreCase)
             );
-        }
 
-        bool existe = _datos.Comunidades.Any(c =>
-            c.Nombre.Equals(nombre.Trim(), StringComparison.OrdinalIgnoreCase)
-        );
+            if (existe)
+            {
+                throw new InvalidOperationException(
+                    "Ya existe una comunidad con ese nombre."
+                );
+            }
 
-        if (existe)
-        {
-            throw new InvalidOperationException(
-                "Ya existe una comunidad con ese nombre."
-            );
-        }
+            Comunidad comunidad = new()
+            {
+                Nombre = nombre.Trim(),
+                Descripcion = descripcion.Trim()
+            };
 
-        Comunidad comunidad = new()
-        {
-            Nombre = nombre.Trim(),
-            Descripcion = descripcion.Trim()
-        };
+            _datos.Comunidades.Add(comunidad);
 
-        _datos.Comunidades.Add(comunidad);
-
-        _repositorio.Guardar(_datos);
+            _repositorio.Guardar(_datos);
+        });
     }
 
     public List<Comunidad> Listar()
@@ -62,50 +65,56 @@ public class ComunidadService
 
     public void Actualizar(string id, string nombre, string descripcion)
     {
-        if (string.IsNullOrWhiteSpace(nombre))
+        _repositorio.EjecutarCambio(_datos, () =>
         {
-            throw new ArgumentException(
-                "El nombre de la comunidad es obligatorio."
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                throw new ArgumentException(
+                    "El nombre de la comunidad es obligatorio."
+                );
+            }
+
+            Comunidad comunidad = BuscarPorId(id);
+
+            bool nombreDuplicado = _datos.Comunidades.Any(c =>
+                c.Id != id &&
+                c.Nombre.Equals(nombre.Trim(), StringComparison.OrdinalIgnoreCase)
             );
-        }
 
-        Comunidad comunidad = BuscarPorId(id);
+            if (nombreDuplicado)
+            {
+                throw new InvalidOperationException(
+                    "Ya existe otra comunidad con ese nombre."
+                );
+            }
 
-        bool nombreDuplicado = _datos.Comunidades.Any(c =>
-            c.Id != id &&
-            c.Nombre.Equals(nombre.Trim(), StringComparison.OrdinalIgnoreCase)
-        );
+            comunidad.Nombre = nombre.Trim();
+            comunidad.Descripcion = descripcion.Trim();
 
-        if (nombreDuplicado)
-        {
-            throw new InvalidOperationException(
-                "Ya existe otra comunidad con ese nombre."
-            );
-        }
-
-        comunidad.Nombre = nombre.Trim();
-        comunidad.Descripcion = descripcion.Trim();
-
-        _repositorio.Guardar(_datos);
+            _repositorio.Guardar(_datos);
+        });
     }
 
     public void Desactivar(string id)
     {
-        Comunidad comunidad = BuscarPorId(id);
-
-        bool tieneEmprendedores = _datos.Emprendedores.Any(e =>
-            e.ComunidadId == id
-        );
-
-        if (tieneEmprendedores)
+        _repositorio.EjecutarCambio(_datos, () =>
         {
-            throw new InvalidOperationException(
-                "No se puede desactivar una comunidad que tiene emprendedores registrados."
+            Comunidad comunidad = BuscarPorId(id);
+
+            bool tieneEmprendedores = _datos.Emprendedores.Any(e =>
+                e.ComunidadId == id
             );
-        }
 
-        comunidad.Activa = false;
+            if (tieneEmprendedores)
+            {
+                throw new InvalidOperationException(
+                    "No se puede desactivar una comunidad que tiene emprendedores registrados."
+                );
+            }
 
-        _repositorio.Guardar(_datos);
+            comunidad.Activa = false;
+
+            _repositorio.Guardar(_datos);
+        });
     }
 }

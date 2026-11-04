@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using Ejercicio05_Artesanias.Modelos;
 
 namespace Ejercicio05_Artesanias.Persistencia;
@@ -19,8 +19,7 @@ public class JsonRepository
             Path.GetFullPath(
                 Path.Combine(
                     AppContext.BaseDirectory,
-                    "..", "..", "..",
-                    "Datos",
+                    "datos",
                     "tienda.json"
                 )
             );
@@ -45,13 +44,16 @@ public class JsonRepository
                 _opcionesJson
             );
 
-        return datos ?? throw new InvalidDataException(
+        datos = datos ?? throw new InvalidDataException(
             "El archivo JSON está vacío o no contiene datos válidos."
         );
+        ValidadorTienda.Validar(datos);
+        return datos;
     }
 
     public void Guardar(DatosTienda datos)
     {
+        ValidadorTienda.Validar(datos);
         string? directorio = Path.GetDirectoryName(_rutaArchivo);
 
         if (directorio is not null)
@@ -64,7 +66,7 @@ public class JsonRepository
             _opcionesJson
         );
 
-        string archivoTemporal = _rutaArchivo + ".tmp";
+        string archivoTemporal = _rutaArchivo + "." + Guid.NewGuid().ToString("N") + ".tmp";
 
         try
         {
@@ -82,6 +84,28 @@ public class JsonRepository
             {
                 File.Delete(archivoTemporal);
             }
+        }
+    }
+
+    // Conserva el mismo contenedor usado por todos los servicios si la operacion falla.
+    public void EjecutarCambio(DatosTienda datos, Action cambio)
+    {
+        string respaldo = JsonSerializer.Serialize(datos, _opcionesJson);
+        try
+        {
+            cambio();
+        }
+        catch
+        {
+            DatosTienda anterior = JsonSerializer.Deserialize<DatosTienda>(respaldo, _opcionesJson)!;
+            datos.Comunidades = anterior.Comunidades;
+            datos.Emprendedores = anterior.Emprendedores;
+            datos.TiposArtesanias = anterior.TiposArtesanias;
+            datos.Artesanias = anterior.Artesanias;
+            datos.Recepciones = anterior.Recepciones;
+            datos.Ventas = anterior.Ventas;
+            datos.Devoluciones = anterior.Devoluciones;
+            throw;
         }
     }
 

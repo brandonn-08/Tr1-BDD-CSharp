@@ -7,6 +7,13 @@ namespace Ejercicio03_Transporte.Servicios
 {
     public class GestionTransporteService
     {
+        private readonly Func<DateTime> reloj;
+
+        public GestionTransporteService(Func<DateTime>? reloj = null)
+        {
+            this.reloj = reloj ?? (() => DateTime.Now);
+        }
+
         public List<Viaje> Viajes { get; set; } = new List<Viaje>();
         public List<Boleto> Boletos { get; set; } = new List<Boleto>();
 
@@ -21,18 +28,28 @@ namespace Ejercicio03_Transporte.Servicios
                 precioBase *= 0.50m;
             }
 
-            return precioBase;
+            return decimal.Round(precioBase, 2, MidpointRounding.AwayFromZero);
         }
 
         public bool RegistrarViaje(Viaje nuevoViaje, out string mensaje)
         {
+            if (string.IsNullOrWhiteSpace(nuevoViaje.IdViaje) ||
+                nuevoViaje.Origen != "Ibarra" ||
+                !new[] { "Quito", "Tulcán", "Otavalo" }.Contains(nuevoViaje.Destino) ||
+                nuevoViaje.CapacidadAsientos <= 0 || nuevoViaje.TarifaBase <= 0 ||
+                !Enum.IsDefined(nuevoViaje.Tipo) || nuevoViaje.AsientosOcupados.Count != 0)
+            {
+                mensaje = "Revise ID, ruta, tarifa, tipo y capacidad. Un viaje nuevo no tiene asientos ocupados.";
+                return false;
+            }
+
             if (Viajes.Any(v => v.IdViaje == nuevoViaje.IdViaje))
             {
                 mensaje = "Ya existe un viaje registrado con ese ID.";
                 return false;
             }
 
-            if (nuevoViaje.FechaHoraSalida <= DateTime.Now)
+            if (nuevoViaje.FechaHoraSalida <= reloj())
             {
                 mensaje = "La fecha y hora de salida deben ser futuras.";
                 return false;
@@ -52,11 +69,11 @@ namespace Ejercicio03_Transporte.Servicios
                 return false;
             }
 
-            // Regla estricta del enunciado: No se elimina un viaje que tenga boletos vendidos activos.
+            // Regla estricta del enunciado: No se elimina un viaje con boletos vendidos, incluso si fueron anulados.
             bool tieneBoletosActivos = Boletos.Any(b => b.IdViaje == idViaje);
             if (tieneBoletosActivos)
             {
-                mensaje = "No se puede eliminar el viaje porque tiene boletos vendidos activos.";
+                mensaje = "No se puede eliminar el viaje porque tiene historial de boletos vendidos.";
                 return false;
             }
 
@@ -67,6 +84,13 @@ namespace Ejercicio03_Transporte.Servicios
 
         public bool VenderBoleto(string idViaje, Pasajero pasajero, int numeroAsiento, out string mensaje)
         {
+            if (pasajero == null || string.IsNullOrWhiteSpace(pasajero.Cedula) ||
+                string.IsNullOrWhiteSpace(pasajero.Nombre) || !Enum.IsDefined(pasajero.Tipo))
+            {
+                mensaje = "Cedula, nombre y tipo de pasajero validos son obligatorios.";
+                return false;
+            }
+
             var viaje = Viajes.FirstOrDefault(v => v.IdViaje == idViaje);
             if (viaje == null)
             {
@@ -75,7 +99,7 @@ namespace Ejercicio03_Transporte.Servicios
             }
 
             // Regla: No se venden boletos para un viaje que ya salió
-            if (DateTime.Now >= viaje.FechaHoraSalida)
+            if (reloj() >= viaje.FechaHoraSalida)
             {
                 mensaje = "No se pueden vender boletos para un viaje que ya salió.";
                 return false;
@@ -88,16 +112,18 @@ namespace Ejercicio03_Transporte.Servicios
                 return false;
             }
 
-            if (viaje.AsientosOcupados.Contains(numeroAsiento))
+            if (viaje.AsientosOcupados.Contains(numeroAsiento) ||
+                Boletos.Any(b => b.IdViaje == idViaje && !b.EstaAnulado && b.NumeroAsiento == numeroAsiento))
             {
                 mensaje = $"El asiento {numeroAsiento} ya está ocupado.";
                 return false;
             }
 
             decimal precioFinal = CalcularPrecioBoleto(viaje, pasajero.Tipo);
-            string idBoleto = "BOL-" + (Boletos.Count + 1).ToString("D4");
+            string idBoleto = "BOL-" + Guid.NewGuid().ToString("N");
 
             Boleto nuevoBoleto = new Boleto(idBoleto, idViaje, pasajero, numeroAsiento, precioFinal);
+            nuevoBoleto.FechaEmision = reloj();
             Boletos.Add(nuevoBoleto);
             viaje.AsientosOcupados.Add(numeroAsiento);
 
@@ -121,10 +147,15 @@ namespace Ejercicio03_Transporte.Servicios
             }
 
             var viaje = Viajes.FirstOrDefault(v => v.IdViaje == boleto.IdViaje);
+            if (viaje == null)
+            {
+                mensaje = "El viaje del boleto no existe; no se puede anular.";
+                return false;
+            }
             if (viaje != null)
             {
                 // Regla estricta: Un boleto solo se puede anular hasta 2 horas antes de la salida
-                double horasRestantes = (viaje.FechaHoraSalida - DateTime.Now).TotalHours;
+                double horasRestantes = (viaje.FechaHoraSalida - reloj()).TotalHours;
                 if (horasRestantes < 2)
                 {
                     mensaje = $"No se puede anular. Faltan menos de 2 horas para la salida ({horasRestantes:F1} horas restantes).";
@@ -136,7 +167,7 @@ namespace Ejercicio03_Transporte.Servicios
             }
 
             boleto.EstaAnulado = true;
-            boleto.FechaAnulacion = DateTime.Now;
+            boleto.FechaAnulacion = reloj();
 
             mensaje = $"El boleto {idBoleto} fue anulado correctamente. El asiento vuelve a estar disponible.";
             return true;

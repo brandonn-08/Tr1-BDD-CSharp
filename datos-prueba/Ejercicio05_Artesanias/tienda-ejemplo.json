@@ -1,0 +1,148 @@
+{
+  "Comunidades": [
+    {
+      "Id": "C1",
+      "Nombre": "Peguche",
+      "Descripcion": "",
+      "Activa": true
+    },
+    {
+      "Id": "C2",
+      "Nombre": "Iluman",
+      "Descripcion": "",
+      "Activa": true
+    }
+  ],
+  "Emprendedores": [
+    {
+      "Id": "E1",
+      "ComunidadId": "C1",
+      "Nombres": "Ana",
+      "Apellidos": "Torres",
+      "Cedula": "1",
+      "Telefono": "",
+      "Correo": "",
+      "Activo": true
+    },
+    {
+      "Id": "E2",
+      "ComunidadId": "C2",
+      "Nombres": "Luis",
+      "Apellidos": "Mina",
+      "Cedula": "2",
+      "Telefono": "",
+      "Correo": "",
+      "Activo": true
+    }
+  ],
+  "TiposArtesanias": [
+    {
+      "Id": "84722009-45e0-4950-985c-a84e756d340c",
+      "Nombre": "Textiles",
+      "PorcentajeComision": 20,
+      "Descripcion": "Artesan\u00EDas elaboradas con tejidos.",
+      "Activo": true
+    },
+    {
+      "Id": "6d16e2e8-63cf-44d6-a25b-ba83f18c7fbb",
+      "Nombre": "Tallas en madera",
+      "PorcentajeComision": 25,
+      "Descripcion": "Artesan\u00EDas elaboradas mediante tallado de madera.",
+      "Activo": true
+    }
+  ],
+  "Artesanias": [
+    {
+      "Id": "A1",
+      "EmprendedorId": "E1",
+      "TipoArtesaniaId": "84722009-45e0-4950-985c-a84e756d340c",
+      "Nombre": "Poncho",
+      "Descripcion": "",
+      "PrecioVenta": 10,
+      "Activa": true
+    },
+    {
+      "Id": "A2",
+      "EmprendedorId": "E2",
+      "TipoArtesaniaId": "6d16e2e8-63cf-44d6-a25b-ba83f18c7fbb",
+      "Nombre": "Talla",
+      "Descripcion": "",
+      "PrecioVenta": 20,
+      "Activa": true
+    }
+  ],
+  "Recepciones": [
+    {
+      "Id": "56dc7328-e684-494a-a740-629bc3f19fe4",
+      "EmprendedorId": "E1",
+      "Fecha": "2026-08-05T18:06:22.5008277-05:00",
+      "Observacion": "",
+      "Detalles": [
+        {
+          "Id": "4107dc64-9b21-4dbc-a4ef-d8c79c02d89d",
+          "ArtesaniaId": "A1",
+          "CantidadRecibida": 5,
+          "PrecioUnitario": 10
+        }
+      ]
+    },
+    {
+      "Id": "91cb1359-d5d6-469b-a443-10bca56ba5b2",
+      "EmprendedorId": "E2",
+      "Fecha": "2026-11-04T18:06:22.5002109-05:00",
+      "Observacion": "",
+      "Detalles": [
+        {
+          "Id": "868f9762-1fde-47c9-8515-5a690a60b57a",
+          "ArtesaniaId": "A2",
+          "CantidadRecibida": 4,
+          "PrecioUnitario": 20
+        }
+      ]
+    }
+  ],
+  "Ventas": [
+    {
+      "Id": "8887960e-c1d4-4d90-922e-a2670b7d3c18",
+      "Fecha": "2026-11-04T18:06:22.5009308-05:00",
+      "Observacion": "",
+      "Detalles": [
+        {
+          "Id": "eb01a7c1-9f14-497d-aaa7-e775ee382fc7",
+          "DetalleRecepcionId": "4107dc64-9b21-4dbc-a4ef-d8c79c02d89d",
+          "CantidadVendida": 2,
+          "PrecioUnitario": 10,
+          "PorcentajeComision": 20,
+          "TotalVendido": 20,
+          "ComisionTienda": 4,
+          "MontoEmprendedor": 16
+        },
+        {
+          "Id": "e1c724d5-3060-451b-8c82-081737d38929",
+          "DetalleRecepcionId": "868f9762-1fde-47c9-8515-5a690a60b57a",
+          "CantidadVendida": 1,
+          "PrecioUnitario": 20,
+          "PorcentajeComision": 25,
+          "TotalVendido": 20,
+          "ComisionTienda": 5,
+          "MontoEmprendedor": 15
+        }
+      ]
+    }
+  ],
+  "Devoluciones": [
+    {
+      "Id": "b37716aa-cc48-46c1-a77c-f827295dd384",
+      "EmprendedorId": "E1",
+      "Fecha": "2026-11-04T18:06:22.5015791-05:00",
+      "Observacion": "",
+      "Detalles": [
+        {
+          "Id": "4d3952f5-0a47-404a-9dc0-7cbd24a3e537",
+          "DetalleRecepcionId": "4107dc64-9b21-4dbc-a4ef-d8c79c02d89d",
+          "CantidadDevuelta": 1
+        }
+      ]
+    }
+  ]
+}

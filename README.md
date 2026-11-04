@@ -1,6 +1,6 @@
 # Trabajo 1 - Bases de Datos
 
-Una solucion con cinco proyectos de consola C# independientes. La biblioteca (ejercicio 1) y la cooperativa de ahorro (ejercicio 2) incluyen persistencia JSON, cinco reportes y pruebas reproducibles. Tambien se han incorporado aportes de transporte y cafeteria. El ejercicio 5 conserva su estructura inicial.
+Una solucion con cinco proyectos de consola C# independientes. La biblioteca (ejercicio 1) y la cooperativa de ahorro (ejercicio 2) incluyen persistencia JSON, cinco reportes y pruebas reproducibles. Tambien se han incorporado aportes de transporte y cafeteria. Los ejercicios 3 y 5 incluyen validaciones, persistencia y pruebas de regresion.
 
 ## Requisitos
 
@@ -83,3 +83,14 @@ dotnet run --project pruebas/Ejercicio02_CooperativaAhorro -- pruebas/Ejercicio0
 ```
 
 La solucion contiene cinco aplicaciones de ejercicios y un proyecto adicional para las pruebas del ejercicio 2. El informe grupal final y los aportes de los demas integrantes siguen pendientes.
+
+## Ejercicios 3 y 5: ejecucion y pruebas
+
+- [Transporte: instrucciones y datos](src/Ejercicio03_Transporte/README.md).
+- [Artesanias: instrucciones y datos](src/Ejercicio05_Artesanias/README.md).
+- [Pruebas y alcance](pruebas/Ejercicios03y05/README.md).
+- [Resultados reales](pruebas/Ejercicios03y05/RESULTADOS.md).
+
+```powershell
+dotnet run --project pruebas/Ejercicios03y05 -- pruebas/Ejercicios03y05/RESULTADOS.md
+```

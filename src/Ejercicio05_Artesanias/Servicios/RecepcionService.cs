@@ -23,27 +23,30 @@ public class RecepcionService
         List<DetalleRecepcion> detalles,
         string observacion = "")
     {
-        ValidarRecepcion(emprendedorId, detalles);
-
-        // Se crea una nueva recepción.
-        Recepcion recepcion = new()
+        _repositorio.EjecutarCambio(_datos, () =>
         {
-            EmprendedorId = emprendedorId,
-            Fecha = DateTime.Now,
-            Observacion = observacion.Trim(),
-            Detalles = detalles.Select(d => new DetalleRecepcion
+            ValidarRecepcion(emprendedorId, detalles);
+
+            // Se crea una nueva recepción.
+            Recepcion recepcion = new()
             {
-                ArtesaniaId = d.ArtesaniaId,
-                CantidadRecibida = d.CantidadRecibida,
-                PrecioUnitario = d.PrecioUnitario
-            }).ToList()
-        };
+                EmprendedorId = emprendedorId,
+                Fecha = DateTime.Now,
+                Observacion = observacion.Trim(),
+                Detalles = detalles.Select(d => new DetalleRecepcion
+                {
+                    ArtesaniaId = d.ArtesaniaId,
+                    CantidadRecibida = d.CantidadRecibida,
+                    PrecioUnitario = d.PrecioUnitario
+                }).ToList()
+            };
 
-        // Se agrega la recepción a la colección.
-        _datos.Recepciones.Add(recepcion);
+            // Se agrega la recepción a la colección.
+            _datos.Recepciones.Add(recepcion);
 
-        // Se guardan los cambios en el archivo JSON.
-        _repositorio.Guardar(_datos);
+            // Se guardan los cambios en el archivo JSON.
+            _repositorio.Guardar(_datos);
+        });
     }
 
     // Valida los datos de una recepción antes de registrarla.

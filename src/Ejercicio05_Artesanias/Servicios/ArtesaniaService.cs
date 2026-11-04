@@ -1,4 +1,4 @@
-﻿using Ejercicio05_Artesanias.Modelos;
+using Ejercicio05_Artesanias.Modelos;
 using Ejercicio05_Artesanias.Persistencia;
 
 namespace Ejercicio05_Artesanias.Servicios;
@@ -21,54 +21,57 @@ public class ArtesaniaService
         string descripcion,
         decimal precioVenta)
     {
-        if (string.IsNullOrWhiteSpace(nombre))
+        _repositorio.EjecutarCambio(_datos, () =>
         {
-            throw new ArgumentException(
-                "El nombre de la artesanía es obligatorio."
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                throw new ArgumentException(
+                    "El nombre de la artesanía es obligatorio."
+                );
+            }
+
+            if (precioVenta <= 0)
+            {
+                throw new ArgumentException(
+                    "El precio de venta debe ser mayor que cero."
+                );
+            }
+
+            bool emprendedorValido = _datos.Emprendedores.Any(e =>
+                e.Id == emprendedorId && e.Activo
             );
-        }
 
-        if (precioVenta <= 0)
-        {
-            throw new ArgumentException(
-                "El precio de venta debe ser mayor que cero."
+            if (!emprendedorValido)
+            {
+                throw new InvalidOperationException(
+                    "El emprendedor no existe o está inactivo."
+                );
+            }
+
+            bool tipoValido = _datos.TiposArtesanias.Any(t =>
+                t.Id == tipoArtesaniaId && t.Activo
             );
-        }
 
-        bool emprendedorValido = _datos.Emprendedores.Any(e =>
-            e.Id == emprendedorId && e.Activo
-        );
+            if (!tipoValido)
+            {
+                throw new InvalidOperationException(
+                    "El tipo de artesanía no existe o está inactivo."
+                );
+            }
 
-        if (!emprendedorValido)
-        {
-            throw new InvalidOperationException(
-                "El emprendedor no existe o está inactivo."
-            );
-        }
+            Artesania artesania = new()
+            {
+                EmprendedorId = emprendedorId,
+                TipoArtesaniaId = tipoArtesaniaId,
+                Nombre = nombre.Trim(),
+                Descripcion = descripcion.Trim(),
+                PrecioVenta = precioVenta
+            };
 
-        bool tipoValido = _datos.TiposArtesanias.Any(t =>
-            t.Id == tipoArtesaniaId && t.Activo
-        );
+            _datos.Artesanias.Add(artesania);
 
-        if (!tipoValido)
-        {
-            throw new InvalidOperationException(
-                "El tipo de artesanía no existe o está inactivo."
-            );
-        }
-
-        Artesania artesania = new()
-        {
-            EmprendedorId = emprendedorId,
-            TipoArtesaniaId = tipoArtesaniaId,
-            Nombre = nombre.Trim(),
-            Descripcion = descripcion.Trim(),
-            PrecioVenta = precioVenta
-        };
-
-        _datos.Artesanias.Add(artesania);
-
-        _repositorio.Guardar(_datos);
+            _repositorio.Guardar(_datos);
+        });
     }
 
     public List<Artesania> Listar()
@@ -94,70 +97,84 @@ public class ArtesaniaService
         string descripcion,
         decimal precioVenta)
     {
-        if (string.IsNullOrWhiteSpace(nombre))
+        _repositorio.EjecutarCambio(_datos, () =>
         {
-            throw new ArgumentException(
-                "El nombre de la artesanía es obligatorio."
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                throw new ArgumentException(
+                    "El nombre de la artesanía es obligatorio."
+                );
+            }
+
+            if (precioVenta <= 0)
+            {
+                throw new ArgumentException(
+                    "El precio de venta debe ser mayor que cero."
+                );
+            }
+
+            Artesania artesania = BuscarPorId(id);
+
+            bool emprendedorValido = _datos.Emprendedores.Any(e =>
+                e.Id == emprendedorId && e.Activo
             );
-        }
 
-        if (precioVenta <= 0)
-        {
-            throw new ArgumentException(
-                "El precio de venta debe ser mayor que cero."
+            if (!emprendedorValido)
+            {
+                throw new InvalidOperationException(
+                    "El emprendedor no existe o está inactivo."
+                );
+            }
+
+            bool tipoValido = _datos.TiposArtesanias.Any(t =>
+                t.Id == tipoArtesaniaId && t.Activo
             );
-        }
 
-        Artesania artesania = BuscarPorId(id);
+            if (!tipoValido)
+            {
+                throw new InvalidOperationException(
+                    "El tipo de artesanía no existe o está inactivo."
+                );
+            }
 
-        bool emprendedorValido = _datos.Emprendedores.Any(e =>
-            e.Id == emprendedorId && e.Activo
-        );
+            if (artesania.EmprendedorId != emprendedorId &&
+                _datos.Recepciones.SelectMany(r => r.Detalles).Any(d => d.ArtesaniaId == id))
+            {
+                throw new InvalidOperationException(
+                    "No se puede cambiar el propietario de una artesania con movimientos."
+                );
+            }
 
-        if (!emprendedorValido)
-        {
-            throw new InvalidOperationException(
-                "El emprendedor no existe o está inactivo."
-            );
-        }
+            artesania.EmprendedorId = emprendedorId;
+            artesania.TipoArtesaniaId = tipoArtesaniaId;
+            artesania.Nombre = nombre.Trim();
+            artesania.Descripcion = descripcion.Trim();
+            artesania.PrecioVenta = precioVenta;
 
-        bool tipoValido = _datos.TiposArtesanias.Any(t =>
-            t.Id == tipoArtesaniaId && t.Activo
-        );
-
-        if (!tipoValido)
-        {
-            throw new InvalidOperationException(
-                "El tipo de artesanía no existe o está inactivo."
-            );
-        }
-
-        artesania.EmprendedorId = emprendedorId;
-        artesania.TipoArtesaniaId = tipoArtesaniaId;
-        artesania.Nombre = nombre.Trim();
-        artesania.Descripcion = descripcion.Trim();
-        artesania.PrecioVenta = precioVenta;
-
-        _repositorio.Guardar(_datos);
+            _repositorio.Guardar(_datos);
+        });
     }
 
     public void Desactivar(string id)
     {
-        Artesania artesania = BuscarPorId(id);
-
-        bool tieneRecepciones = _datos.Recepciones
-            .SelectMany(r => r.Detalles)
-            .Any(d => d.ArtesaniaId == id);
-
-        if (tieneRecepciones)
+        _repositorio.EjecutarCambio(_datos, () =>
         {
-            throw new InvalidOperationException(
-                "No se puede desactivar una artesanía que tiene movimientos de recepción."
-            );
-        }
+            Artesania artesania = BuscarPorId(id);
 
-        artesania.Activa = false;
+            bool tieneRecepciones = _datos.Recepciones
+                .SelectMany(r => r.Detalles)
+                .Any(d => d.ArtesaniaId == id);
 
-        _repositorio.Guardar(_datos);
+            if (tieneRecepciones)
+            {
+                throw new InvalidOperationException(
+                    "No se puede desactivar una artesanía que tiene movimientos de recepción."
+                );
+            }
+
+            artesania.Activa = false;
+
+            _repositorio.Guardar(_datos);
+        });
     }
 }

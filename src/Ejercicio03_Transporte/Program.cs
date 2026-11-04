@@ -9,6 +9,23 @@ namespace Ejercicio03_Transporte.Consola
     {
         static void Main(string[] args)
         {
+            try { Ejecutar(args); }
+            catch (Exception ex) { Console.Error.WriteLine("No se pudo continuar: " + ex.Message); Environment.ExitCode = 1; }
+        }
+
+        private static DateTime LeerFechaReporte(string mensaje)
+        {
+            Console.Write(mensaje + " (aaaa-mm-dd): ");
+            if (!DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var fecha))
+            {
+                throw new ArgumentException("Fecha invalida. Use aaaa-mm-dd.");
+            }
+            return fecha;
+        }
+
+        static void Ejecutar(string[] args)
+        {
+            if (args.Length > 0) ManejadorArchivos.RutaCarpeta = Path.GetFullPath(args[0]);
             GestionTransporteService servicio = new GestionTransporteService();
             ReporteService reporteService = new ReporteService(servicio);
 
@@ -27,7 +44,7 @@ namespace Ejercicio03_Transporte.Consola
             int opcion = 0;
             do
             {
-                Console.Clear();
+                if (!Console.IsInputRedirected) Console.Clear();
                 Console.WriteLine("========================================");
                 Console.WriteLine("   COOPERATIVA DE TRANSPORTE DE IBARRA  ");
                 Console.WriteLine("========================================");
@@ -41,12 +58,17 @@ namespace Ejercicio03_Transporte.Consola
                 Console.WriteLine("8. Salir");
                 Console.Write("Seleccione una opción: ");
 
-                if (int.TryParse(Console.ReadLine(), out opcion))
+                string? entrada = Console.ReadLine();
+                if (entrada == null) break;
+                var respaldo = System.Text.Json.JsonSerializer.Serialize(new ManejadorArchivos.DatosTransporte { Viajes = servicio.Viajes, Boletos = servicio.Boletos });
+                try
+                {
+                if (int.TryParse(entrada, out opcion))
                 {
                     switch (opcion)
                     {
                         case 1:
-                            Console.Clear();
+                            if (!Console.IsInputRedirected) Console.Clear();
                             Console.WriteLine("--- VIAJES DISPONIBLES ---");
                             foreach (var v in servicio.Viajes)
                             {
@@ -56,7 +78,7 @@ namespace Ejercicio03_Transporte.Consola
                             break;
 
                         case 2:
-                            Console.Clear();
+                            if (!Console.IsInputRedirected) Console.Clear();
                             Console.WriteLine("--- REGISTRAR NUEVO VIAJE ---");
                             Console.Write("ID del Viaje (ej. V04): ");
                             string idV = Console.ReadLine() ?? "";
@@ -68,7 +90,7 @@ namespace Ejercicio03_Transporte.Consola
                             if (DateTime.TryParse(Console.ReadLine(), out DateTime fechaSalida))
                             {
                                 Console.Write("Tarifa Base ($): ");
-                                if (decimal.TryParse(Console.ReadLine(), out decimal tarifa))
+                                if (decimal.TryParse(Console.ReadLine()?.Replace(',', '.'), System.Globalization.NumberStyles.AllowDecimalPoint | System.Globalization.NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out decimal tarifa))
                                 {
                                     Console.WriteLine("Tipo de Viaje: [1] Directo (100%), [2] Con Paradas (85%)");
                                     if (int.TryParse(Console.ReadLine(), out int tipoInt) && (tipoInt == 1 || tipoInt == 2))
@@ -97,7 +119,7 @@ namespace Ejercicio03_Transporte.Consola
                             break;
 
                         case 3:
-                            Console.Clear();
+                            if (!Console.IsInputRedirected) Console.Clear();
                             Console.WriteLine("--- ELIMINAR VIAJE ---");
                             Console.Write("Ingrese el ID del viaje a eliminar: ");
                             string idDel = Console.ReadLine() ?? "";
@@ -113,7 +135,7 @@ namespace Ejercicio03_Transporte.Consola
                             break;
 
                         case 4:
-                            Console.Clear();
+                            if (!Console.IsInputRedirected) Console.Clear();
                             Console.WriteLine("--- VENTA DE BOLETO ---");
                             Console.Write("Ingrese ID del Viaje: ");
                             string idViajeVenta = Console.ReadLine() ?? "";
@@ -146,7 +168,7 @@ namespace Ejercicio03_Transporte.Consola
                             break;
 
                         case 5:
-                            Console.Clear();
+                            if (!Console.IsInputRedirected) Console.Clear();
                             Console.WriteLine("--- ANULACIÓN DE BOLETO ---");
                             Console.Write("Ingrese el ID del Boleto a anular (ej. BOL-0001): ");
                             string idBol = Console.ReadLine() ?? "";
@@ -163,15 +185,15 @@ namespace Ejercicio03_Transporte.Consola
                             break;
 
                         case 6:
-                            Console.Clear();
+                            if (!Console.IsInputRedirected) Console.Clear();
                             Console.WriteLine("--- REPORTES ADMINISTRATIVOS ---");
                             Console.WriteLine("1. Mapa de Asientos de un Viaje");
-                            Console.WriteLine("2. Recaudación por Ruta (Últimos 30 días)");
+                            Console.WriteLine("2. Recaudación por Ruta (Período)");
                             Console.WriteLine("3. Porcentaje de Ocupación de cada Viaje");
-                            Console.WriteLine("4. Boletos Anulados (Últimos 30 días)");
+                            Console.WriteLine("4. Boletos Anulados (Período)");
                             Console.WriteLine("5. Auditoría de Asientos Libres");
                             Console.Write("Seleccione una opción de reporte: ");
-                            string repOpt = Console.ReadLine();
+                            string repOpt = Console.ReadLine() ?? "";
 
                             if (repOpt == "1")
                             {
@@ -181,7 +203,7 @@ namespace Ejercicio03_Transporte.Consola
                             }
                             else if (repOpt == "2")
                             {
-                                reporteService.GenerarRecaudacionPorRuta(DateTime.Now.AddDays(-30), DateTime.Now.AddDays(1));
+                                reporteService.GenerarRecaudacionPorRuta(LeerFechaReporte("Desde"), LeerFechaReporte("Hasta"));
                             }
                             else if (repOpt == "3")
                             {
@@ -189,7 +211,7 @@ namespace Ejercicio03_Transporte.Consola
                             }
                             else if (repOpt == "4")
                             {
-                                reporteService.GenerarBoletosAnulados(DateTime.Now.AddDays(-30), DateTime.Now.AddDays(1));
+                                reporteService.GenerarBoletosAnulados(LeerFechaReporte("Desde"), LeerFechaReporte("Hasta"));
                             }
                             else if (repOpt == "5")
                             {
@@ -220,10 +242,19 @@ namespace Ejercicio03_Transporte.Consola
                     Console.WriteLine("\nPor favor ingrese un número válido.");
                 }
 
+                }
+                catch (Exception ex)
+                {
+                    var anterior = System.Text.Json.JsonSerializer.Deserialize<ManejadorArchivos.DatosTransporte>(respaldo)!;
+                    servicio.Viajes = anterior.Viajes;
+                    servicio.Boletos = anterior.Boletos;
+                    Console.WriteLine("No se realizo la operacion: " + ex.Message);
+                }
+
                 if (opcion != 8)
                 {
                     Console.WriteLine("\nPresione cualquier tecla para continuar...");
-                    Console.ReadKey();
+                    if (!Console.IsInputRedirected) Console.ReadKey();
                 }
 
             } while (opcion != 8);

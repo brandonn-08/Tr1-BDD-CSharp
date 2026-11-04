@@ -24,78 +24,81 @@ public class VentaService
         Dictionary<string, int> cantidadesPorArtesania,
         string observacion = "")
     {
-        ValidarVenta(cantidadesPorArtesania);
-
-        Venta venta = new()
+        _repositorio.EjecutarCambio(_datos, () =>
         {
-            Fecha = DateTime.Now,
-            Observacion = observacion.Trim()
-        };
+            ValidarVenta(cantidadesPorArtesania);
 
-        // Procesar cada artesanía solicitada.
-        foreach (var solicitud in cantidadesPorArtesania)
-        {
-            string artesaniaId = solicitud.Key;
-            int cantidadPendiente = solicitud.Value;
-
-            Artesania artesania = _datos.Artesanias
-                .First(a => a.Id == artesaniaId);
-
-            TipoArtesania tipo = _datos.TiposArtesanias
-                .First(t => t.Id == artesania.TipoArtesaniaId);
-
-            // Obtener todos los lotes disponibles de la artesanía.
-            // Se ordenan por fecha para aplicar FIFO.
-            var lotes = _datos.Recepciones
-                .SelectMany(recepcion => recepcion.Detalles
-                    .Where(detalle =>
-                        detalle.ArtesaniaId == artesaniaId)
-                    .Select(detalle => new
-                    {
-                        Recepcion = recepcion,
-                        Detalle = detalle
-                    }))
-                .OrderBy(l => l.Recepcion.Fecha)
-                .ToList();
-
-            foreach (var lote in lotes)
+            Venta venta = new()
             {
-                if (cantidadPendiente == 0)
-                    break;
+                Fecha = DateTime.Now,
+                Observacion = observacion.Trim()
+            };
 
-                int disponible = CalcularDisponible(
-                    lote.Detalle.Id
-                );
+            // Procesar cada artesanía solicitada.
+            foreach (var solicitud in cantidadesPorArtesania)
+            {
+                string artesaniaId = solicitud.Key;
+                int cantidadPendiente = solicitud.Value;
 
-                if (disponible <= 0)
-                    continue;
+                Artesania artesania = _datos.Artesanias
+                    .First(a => a.Id == artesaniaId);
 
-                // Vender la cantidad disponible del lote
-                // o la cantidad que todavía se necesita.
-                int cantidadVendida = Math.Min(
-                    disponible,
-                    cantidadPendiente
-                );
+                TipoArtesania tipo = _datos.TiposArtesanias
+                    .First(t => t.Id == artesania.TipoArtesaniaId);
 
-                DetalleVenta detalleVenta = new()
+                // Obtener todos los lotes disponibles de la artesanía.
+                // Se ordenan por fecha para aplicar FIFO.
+                var lotes = _datos.Recepciones
+                    .SelectMany(recepcion => recepcion.Detalles
+                        .Where(detalle =>
+                            detalle.ArtesaniaId == artesaniaId)
+                        .Select(detalle => new
+                        {
+                            Recepcion = recepcion,
+                            Detalle = detalle
+                        }))
+                    .OrderBy(l => l.Recepcion.Fecha)
+                    .ToList();
+
+                foreach (var lote in lotes)
                 {
-                    DetalleRecepcionId = lote.Detalle.Id,
-                    CantidadVendida = cantidadVendida,
-                    PrecioUnitario = artesania.PrecioVenta,
-                    PorcentajeComision = tipo.PorcentajeComision
-                };
+                    if (cantidadPendiente == 0)
+                        break;
 
-                venta.Detalles.Add(detalleVenta);
+                    int disponible = CalcularDisponible(
+                        lote.Detalle.Id
+                    );
 
-                cantidadPendiente -= cantidadVendida;
+                    if (disponible <= 0)
+                        continue;
+
+                    // Vender la cantidad disponible del lote
+                    // o la cantidad que todavía se necesita.
+                    int cantidadVendida = Math.Min(
+                        disponible,
+                        cantidadPendiente
+                    );
+
+                    DetalleVenta detalleVenta = new()
+                    {
+                        DetalleRecepcionId = lote.Detalle.Id,
+                        CantidadVendida = cantidadVendida,
+                        PrecioUnitario = artesania.PrecioVenta,
+                        PorcentajeComision = tipo.PorcentajeComision
+                    };
+
+                    venta.Detalles.Add(detalleVenta);
+
+                    cantidadPendiente -= cantidadVendida;
+                }
             }
-        }
 
-        // Agregar la venta al sistema.
-        _datos.Ventas.Add(venta);
+            // Agregar la venta al sistema.
+            _datos.Ventas.Add(venta);
 
-        // Guardar los cambios en JSON.
-        _repositorio.Guardar(_datos);
+            // Guardar los cambios en JSON.
+            _repositorio.Guardar(_datos);
+        });
     }
 
     // Comprueba que la venta sea válida antes de registrarla.
@@ -247,7 +250,7 @@ public class VentaService
         DateTime fechaInicio,
         DateTime fechaFin)
     {
-        if (fechaInicio > fechaFin)
+        if (fechaInicio.Date > fechaFin.Date)
         {
             throw new ArgumentException(
                 "La fecha inicial no puede ser posterior a la fecha final."
@@ -256,8 +259,8 @@ public class VentaService
 
         return _datos.Ventas
             .Where(v =>
-                v.Fecha >= fechaInicio &&
-                v.Fecha <= fechaFin)
+                v.Fecha.Date >= fechaInicio.Date &&
+                v.Fecha.Date <= fechaFin.Date)
             .OrderBy(v => v.Fecha)
             .ToList();
     }

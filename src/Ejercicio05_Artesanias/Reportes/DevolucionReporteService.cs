@@ -44,7 +44,7 @@ public class DevolucionReporteService
                 int diasEnTienda =
                     (fechaConsulta.Date - recepcion.Fecha.Date).Days;
 
-                if (diasEnTienda <= 90)
+                if (recepcion.Fecha.AddDays(90) >= fechaConsulta)
                     continue;
 
                 int vendidas = _datos.Ventas

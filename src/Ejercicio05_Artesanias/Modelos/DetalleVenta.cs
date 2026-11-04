@@ -1,4 +1,4 @@
-﻿namespace Ejercicio05_Artesanias.Modelos;
+namespace Ejercicio05_Artesanias.Modelos;
 
 public class DetalleVenta
 {
@@ -12,7 +12,7 @@ public class DetalleVenta
         CantidadVendida * PrecioUnitario;
 
     public decimal ComisionTienda =>
-        TotalVendido * PorcentajeComision / 100m;
+        decimal.Round(TotalVendido * PorcentajeComision / 100m, 2, MidpointRounding.AwayFromZero);
 
     public decimal MontoEmprendedor =>
         TotalVendido - ComisionTienda;

@@ -28,13 +28,20 @@ internal class Program
 
     static void Main(string[] args)
     {
-        InicializarServicios();
+        try { Ejecutar(args); }
+        catch (EndOfStreamException) { Console.WriteLine("Entrada finalizada."); }
+        catch (Exception ex) { Console.Error.WriteLine("No se pudo continuar: " + ex.Message); Environment.ExitCode = 1; }
+    }
+
+    static void Ejecutar(string[] args)
+    {
+        InicializarServicios(args.Length > 0 ? args[0] : null);
 
         bool continuar = true;
 
         while (continuar)
         {
-            Console.Clear();
+            if (!Console.IsInputRedirected) Console.Clear();
 
             Console.WriteLine("======================================");
             Console.WriteLine("       TIENDA DE ARTESANIAS");
@@ -113,6 +120,7 @@ internal class Program
                         break;
                 }
             }
+            catch (EndOfStreamException) { throw; }
             catch (Exception ex)
             {
                 Console.WriteLine();
@@ -125,9 +133,9 @@ internal class Program
     }
 
     // Inicializa la persistencia y todos los servicios.
-    private static void InicializarServicios()
+    private static void InicializarServicios(string? ruta)
     {
-        _repositorio = new JsonRepository();
+        _repositorio = new JsonRepository(ruta);
         _datos = _repositorio.Cargar();
 
         _comunidadService = new ComunidadService(_datos, _repositorio);
@@ -151,7 +159,7 @@ internal class Program
 
     private static void MenuComunidades()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== GESTION DE COMUNIDADES =====");
         Console.WriteLine("1. Registrar comunidad");
         Console.WriteLine("2. Listar comunidades");
@@ -231,7 +239,7 @@ internal class Program
 
     private static void MenuEmprendedores()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== GESTION DE EMPRENDEDORES =====");
         Console.WriteLine("1. Registrar emprendedor");
         Console.WriteLine("2. Listar emprendedores");
@@ -329,7 +337,7 @@ internal class Program
 
     private static void MenuArtesanias()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== GESTION DE ARTESANIAS =====");
         Console.WriteLine("1. Registrar artesania");
         Console.WriteLine("2. Listar artesanias");
@@ -440,7 +448,7 @@ internal class Program
 
     private static void RegistrarRecepcion()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== REGISTRAR RECEPCION =====");
 
         ListarEmprendedores();
@@ -486,7 +494,7 @@ internal class Program
 
     private static void RegistrarVenta()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== REGISTRAR VENTA =====");
 
         Dictionary<string, int> cantidades = new();
@@ -525,7 +533,7 @@ internal class Program
 
     private static void RegistrarDevolucion()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== REGISTRAR DEVOLUCION =====");
 
         ListarEmprendedores();
@@ -591,7 +599,7 @@ internal class Program
 
     private static void ConsultarInventario()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== INVENTARIO DISPONIBLE =====");
 
         var inventario = _inventarioReporteService.Generar();
@@ -623,7 +631,7 @@ internal class Program
 
     private static void ReporteLiquidaciones()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== LIQUIDACION POR EMPRENDEDOR =====");
 
         ListarEmprendedores();
@@ -653,7 +661,7 @@ internal class Program
 
     private static void ReporteDevoluciones()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== ARTESANIAS PARA DEVOLVER =====");
 
         var resultados = _devolucionReporteService.Generar();
@@ -682,7 +690,7 @@ internal class Program
 
     private static void ReporteVentas()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== REPORTES DE VENTAS =====");
 
         DateTime fechaInicio = LeerFecha("Fecha inicial (dd/MM/yyyy): ");
@@ -737,12 +745,14 @@ internal class Program
 
     private static void AuditoriaInventario()
     {
-        Console.Clear();
+        if (!Console.IsInputRedirected) Console.Clear();
         Console.WriteLine("===== AUDITORIA DE INVENTARIO =====");
 
         var inventario = _inventarioReporteService.Generar();
 
-        bool correcto = true;
+        var errores = ValidadorTienda.Auditar(_datos);
+        bool correcto = errores.Count == 0;
+        foreach (string error in errores) Console.WriteLine("INCONSISTENCIA: " + error);
 
         foreach (var item in inventario)
         {
@@ -751,7 +761,7 @@ internal class Program
                 item.CantidadDevuelta +
                 item.CantidadDisponible;
 
-            bool coincide = calculado == item.CantidadRecibida;
+            bool coincide = calculado == item.CantidadRecibida && item.CantidadDisponible >= 0;
 
             if (!coincide)
                 correcto = false;
@@ -779,13 +789,18 @@ internal class Program
     // METODOS AUXILIARES
     // ==========================================
 
+    private static string LeerLinea()
+    {
+        return Console.ReadLine() ?? throw new EndOfStreamException();
+    }
+
     private static string LeerTexto(string mensaje)
     {
         while (true)
         {
             Console.Write(mensaje);
 
-            string? valor = Console.ReadLine();
+            string? valor = LeerLinea();
 
             if (!string.IsNullOrWhiteSpace(valor))
                 return valor.Trim();
@@ -800,7 +815,7 @@ internal class Program
         {
             Console.Write(mensaje);
 
-            if (int.TryParse(Console.ReadLine(), out int valor))
+            if (int.TryParse(LeerLinea(), out int valor))
                 return valor;
 
             Console.WriteLine("Ingrese un numero entero valido.");
@@ -813,22 +828,9 @@ internal class Program
         {
             Console.Write(mensaje);
 
-            string? entrada = Console.ReadLine();
+            string? entrada = LeerLinea();
 
-            if (decimal.TryParse(
-                entrada,
-                NumberStyles.Number,
-                CultureInfo.CurrentCulture,
-                out decimal valor))
-            {
-                return valor;
-            }
-
-            if (decimal.TryParse(
-                entrada,
-                NumberStyles.Number,
-                CultureInfo.InvariantCulture,
-                out valor))
+            if (decimal.TryParse(entrada?.Replace(',', '.'), NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out decimal valor))
             {
                 return valor;
             }
@@ -844,7 +846,7 @@ internal class Program
             Console.Write(mensaje);
 
             if (DateTime.TryParseExact(
-                Console.ReadLine(),
+                LeerLinea(),
                 "dd/MM/yyyy",
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
@@ -861,7 +863,7 @@ internal class Program
     {
         Console.Write(mensaje);
 
-        string? respuesta = Console.ReadLine();
+        string? respuesta = LeerLinea();
 
         return respuesta?.Trim().ToLower() == "s";
     }
@@ -870,6 +872,6 @@ internal class Program
     {
         Console.WriteLine();
         Console.WriteLine("Presione ENTER para continuar...");
-        Console.ReadLine();
+        LeerLinea();
     }
 }

@@ -25,29 +25,32 @@ public class DevolucionService
         Dictionary<string, int> cantidadesPorLote,
         string observacion = "")
     {
-        ValidarDevolucion(emprendedorId, cantidadesPorLote);
-
-        Devolucion devolucion = new()
+        _repositorio.EjecutarCambio(_datos, () =>
         {
-            EmprendedorId = emprendedorId,
-            Fecha = DateTime.Now,
-            Observacion = observacion.Trim()
-        };
+            ValidarDevolucion(emprendedorId, cantidadesPorLote);
 
-        foreach (var solicitud in cantidadesPorLote)
-        {
-            devolucion.Detalles.Add(new DetalleDevolucion
+            Devolucion devolucion = new()
             {
-                DetalleRecepcionId = solicitud.Key,
-                CantidadDevuelta = solicitud.Value
-            });
-        }
+                EmprendedorId = emprendedorId,
+                Fecha = DateTime.Now,
+                Observacion = observacion.Trim()
+            };
 
-        // Registrar la devolución.
-        _datos.Devoluciones.Add(devolucion);
+            foreach (var solicitud in cantidadesPorLote)
+            {
+                devolucion.Detalles.Add(new DetalleDevolucion
+                {
+                    DetalleRecepcionId = solicitud.Key,
+                    CantidadDevuelta = solicitud.Value
+                });
+            }
 
-        // Guardar los cambios en el archivo JSON.
-        _repositorio.Guardar(_datos);
+            // Registrar la devolución.
+            _datos.Devoluciones.Add(devolucion);
+
+            // Guardar los cambios en el archivo JSON.
+            _repositorio.Guardar(_datos);
+        });
     }
 
     // Comprueba que la devolución cumpla las reglas del negocio.
@@ -208,7 +211,7 @@ public class DevolucionService
         DateTime fechaInicio,
         DateTime fechaFin)
     {
-        if (fechaInicio > fechaFin)
+        if (fechaInicio.Date > fechaFin.Date)
         {
             throw new ArgumentException(
                 "La fecha inicial no puede ser posterior a la fecha final."
@@ -217,8 +220,8 @@ public class DevolucionService
 
         return _datos.Devoluciones
             .Where(d =>
-                d.Fecha >= fechaInicio &&
-                d.Fecha <= fechaFin)
+                d.Fecha.Date >= fechaInicio.Date &&
+                d.Fecha.Date <= fechaFin.Date)
             .OrderBy(d => d.Fecha)
             .ToList();
     }

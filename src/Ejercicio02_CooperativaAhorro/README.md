@@ -56,7 +56,18 @@ dotnet run --project pruebas/Ejercicio02_CooperativaAhorro -- pruebas/Ejercicio0
 
 Es un programa de pruebas de consola sin dependencias adicionales; no se ejecuta con `dotnet test`. Devuelve código 0 si todos los casos pasan y código 1 si alguno falla. Los casos crean sus propios archivos temporales, comprueban resultados y los eliminan al finalizar. `RESULTADOS.md` contiene la tabla de resultados reales de la última ejecución; no se debe editar para aparentar que una prueba pasó.
 
+## Organización del código
+
+Los modelos están separados en `Socio.cs`, `Cuenta.cs`, `CuentaAhorro.cs`, `CuentaCorriente.cs`, `Movimiento.cs` y `DatosCooperativa.cs`, como los modelos de los ejercicios 3 y 4. Los métodos usan bloques con llaves y cada instrucción ocupa su propia línea. Las altas de socios y movimientos se realizan creando un objeto y asignando sus propiedades paso a paso.
+
+`Servicios/Cooperativa.cs` contiene las operaciones; `Persistencia/ArchivoJson.cs`, la lectura y escritura; `Reportes/ReportesCooperativa.cs`, las consultas; y `Program.cs`, el menú. Cada operación trabaja sobre una copia de los datos y solo la conserva después de guardar: así una transferencia fallida no modifica ninguna cuenta.
+
 ## Diagrama de clases
+
+- [Ver el diagrama](../../documentacion/diagramas-de-clases/Ejercicio02.svg).
+- [Diagrama editable en diagrams.net](../../documentacion/diagramas-de-clases/Ejercicio02.drawio).
+
+El dibujo muestra los modelos principales y las clases de servicio, persistencia y reportes. Las clases auxiliares `InteresCuenta`, `TotalesPeriodo` y `AuditoriaCuenta` representan los resultados de los reportes.
 
 ```mermaid
 classDiagram

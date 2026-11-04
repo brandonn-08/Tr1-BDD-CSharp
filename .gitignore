@@ -11,3 +11,6 @@
 .dotnet-local/
 **/__pycache__/
 **/biblioteca.json
+
+# Modelo anterior abierto localmente en PowerDesigner
+/documentacion/diagramas-de-clases/Biblioteca-Ejercicio01.oom

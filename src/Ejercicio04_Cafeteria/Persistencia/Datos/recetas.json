@@ -1,0 +1,4 @@
+[
+  { "Id": 1, "PlatoId": 1, "Ingredientes": [ { "IngredienteId": 1, "Cantidad": 0.20 }, { "IngredienteId": 2, "Cantidad": 0.10 } ] },
+  { "Id": 2, "PlatoId": 2, "Ingredientes": [ { "IngredienteId": 3, "Cantidad": 0.02 }, { "IngredienteId": 2, "Cantidad": 0.15 } ] }
+]

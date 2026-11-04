@@ -1,0 +1,5 @@
+[
+  { "Id": 1, "Nombre": "Harina", "Unidad": "kg", "Stock": 12.0, "StockMinimo": 5.0, "Costo": 2.50 },
+  { "Id": 2, "Nombre": "Leche", "Unidad": "litros", "Stock": 8.0, "StockMinimo": 4.0, "Costo": 1.80 },
+  { "Id": 3, "Nombre": "Cafe molido", "Unidad": "kg", "Stock": 3.0, "StockMinimo": 2.0, "Costo": 12.00 }
+]

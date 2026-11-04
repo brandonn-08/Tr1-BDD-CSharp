@@ -6,5 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <None Update="Persistencia\Datos\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
 </Project>

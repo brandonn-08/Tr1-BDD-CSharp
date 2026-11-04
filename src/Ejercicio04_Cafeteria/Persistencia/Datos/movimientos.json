@@ -1,0 +1,5 @@
+[
+  { "Id": 1, "IngredienteId": 1, "Tipo": "Entrada", "Cantidad": 12.0, "StockAnterior": 0.0, "StockNuevo": 12.0, "Fecha": "2026-01-05T08:00:00", "Descripcion": "Carga inicial" },
+  { "Id": 2, "IngredienteId": 2, "Tipo": "Entrada", "Cantidad": 8.0, "StockAnterior": 0.0, "StockNuevo": 8.0, "Fecha": "2026-01-05T08:00:00", "Descripcion": "Carga inicial" },
+  { "Id": 3, "IngredienteId": 3, "Tipo": "Entrada", "Cantidad": 3.0, "StockAnterior": 0.0, "StockNuevo": 3.0, "Fecha": "2026-01-05T08:00:00", "Descripcion": "Carga inicial" }
+]

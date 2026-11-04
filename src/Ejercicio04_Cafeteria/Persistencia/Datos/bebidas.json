@@ -1,0 +1,4 @@
+[
+  { "Id": 1, "Nombre": "Agua mineral", "Precio": 1.50, "Stock": 20 },
+  { "Id": 2, "Nombre": "Jugo natural", "Precio": 2.25, "Stock": 12 }
+]

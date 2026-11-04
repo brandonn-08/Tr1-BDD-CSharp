@@ -1,0 +1,4 @@
+[
+  { "Id": 1, "ProductoId": 1, "Tipo": "Ingrediente", "Cantidad": 12.0, "Costo": 2.50, "Fecha": "2026-01-05T08:00:00" },
+  { "Id": 2, "ProductoId": 1, "Tipo": "Bebida", "Cantidad": 20, "Costo": 1.50, "Fecha": "2026-01-06T08:00:00" }
+]

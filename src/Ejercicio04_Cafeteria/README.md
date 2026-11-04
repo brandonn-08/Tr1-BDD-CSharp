@@ -2,6 +2,8 @@
 
 Aplicación de consola en C# con ingredientes, platos y recetas, bebidas, abastecimientos, ventas e inventario.
 
+Diagrama de clases: `documentacion/diagramas-de-clases/Ejercicio04-Cafeteria.png`.
+
 ## Ejecutar
 
 Desde la raíz del repositorio, con el SDK de .NET 10 instalado:

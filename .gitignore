@@ -6,3 +6,8 @@
 # Resultados de compilacion
 **/bin/
 **/obj/
+
+# Datos y herramientas de uso local
+.dotnet-local/
+**/__pycache__/
+**/biblioteca.json

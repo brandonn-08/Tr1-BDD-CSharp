@@ -1,6 +1,6 @@
 # Trabajo 1 - Bases de Datos
 
-Una solucion con cinco proyectos de consola C# independientes. El ejercicio 2 (Cooperativa de ahorro) esta implementado con persistencia JSON, cinco reportes y pruebas reproducibles. Los ejercicios 1, 3, 4 y 5 conservan su estructura inicial y estan pendientes.
+Una solucion con cinco proyectos de consola C# independientes. La biblioteca (ejercicio 1) y la cooperativa de ahorro (ejercicio 2) incluyen persistencia JSON, cinco reportes y pruebas reproducibles. Tambien se han incorporado aportes de transporte y cafeteria. El ejercicio 5 conserva su estructura inicial.
 
 ## Requisitos
 
@@ -25,7 +25,7 @@ dotnet run --project src/Ejercicio04_Cafeteria
 dotnet run --project src/Ejercicio05_Artesanias
 ```
 
-Cada comando ejecuta un proyecto distinto. El ejercicio 2 abre el menu de la cooperativa; los otros cuatro muestran un mensaje de implementacion pendiente.
+Cada comando ejecuta un proyecto distinto. El ejercicio 1 abre el menu de la biblioteca y el ejercicio 2 abre el de la cooperativa.
 
 En Visual Studio, abrir `Tr1-BDD-CSharp.sln`, hacer clic derecho sobre el proyecto deseado y seleccionar **Establecer como proyecto de inicio**.
 
@@ -55,6 +55,21 @@ Los proyectos no dependen entre si. Cada integrante puede desarrollar el ejercic
 Los nombres de las carpetas son una decision de organizacion del grupo; el enunciado exige los entregables, no estos nombres concretos. Se mantienen para que cada integrante sepa donde colocar su trabajo.
 
 Las carpetas vacias se conservan en Git mediante archivos `.gitkeep`, que no contienen codigo. Las carpetas internas de cada proyecto son una guia inicial y pueden adaptarse durante el desarrollo.
+
+## Ejercicio 1: biblioteca
+
+- [Instrucciones](src/Ejercicio01_Biblioteca/README.md).
+- [Diagrama de clases](documentacion/diagramas-de-clases/Ejercicio01.md).
+- [Diagrama visual](documentacion/diagramas-de-clases/Ejercicio01.html).
+- [Datos de ejemplo](datos-prueba/Ejercicio01_Biblioteca/ejemplo.json).
+- [Informe y bitacora de IA](documentacion/informe/Informe-Ejercicio01.md).
+- [Resultados reales de pruebas](documentacion/informe/Pruebas-Ejercicio01.md).
+
+Despues de compilar el ejercicio 1, se pueden repetir sus 13 pruebas con Python 3:
+
+```text
+python pruebas/Ejercicio01_Biblioteca/verificar.py
+```
 
 ## Ejercicio 2 implementado
 

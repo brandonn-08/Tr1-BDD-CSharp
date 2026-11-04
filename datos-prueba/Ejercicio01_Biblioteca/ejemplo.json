@@ -1,0 +1,48 @@
+{
+  "Usuarios": [
+    {
+      "Id": 1,
+      "Nombre": "Ana",
+      "MultaPendiente": 0
+    },
+    {
+      "Id": 2,
+      "Nombre": "Luis",
+      "MultaPendiente": 0
+    }
+  ],
+  "Materiales": [
+    {
+      "Id": 1,
+      "Titulo": "Introduccion a la programacion",
+      "Tipo": "Libro",
+      "Total": 3
+    },
+    {
+      "Id": 2,
+      "Titulo": "Ciencia y tecnologia",
+      "Tipo": "Revista",
+      "Total": 2
+    }
+  ],
+  "Prestamos": [
+    {
+      "Id": 1,
+      "UsuarioId": 1,
+      "MaterialId": 1,
+      "Fecha": "2026-10-25T00:00:00",
+      "Vence": "2026-11-01T00:00:00",
+      "Devuelto": null,
+      "Multa": 0
+    },
+    {
+      "Id": 2,
+      "UsuarioId": 2,
+      "MaterialId": 2,
+      "Fecha": "2026-11-03T00:00:00",
+      "Vence": "2026-11-06T00:00:00",
+      "Devuelto": null,
+      "Multa": 0
+    }
+  ]
+}

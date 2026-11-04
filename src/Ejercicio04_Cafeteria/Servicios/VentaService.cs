@@ -14,12 +14,15 @@ namespace Ejercicio04_Cafeteria.Servicios
             var recetas = Archivo.Leer<Receta>("recetas.json");
             var platos = Archivo.Leer<Plato>("platos.json");
             var requeridos = new Dictionary<int, decimal>();
+            var bebidasRequeridas = new Dictionary<int, int>();
             foreach (var d in detalles)
             {
+                if (d.Tipo is null || (!d.Tipo.Equals("Bebida", StringComparison.OrdinalIgnoreCase) && !d.Tipo.Equals("Plato", StringComparison.OrdinalIgnoreCase)))
+                    throw new ArgumentException("El tipo debe ser Plato o Bebida.");
                 if (d.Tipo.Equals("Bebida", StringComparison.OrdinalIgnoreCase))
                 {
                     var b = bebidas.FirstOrDefault(x => x.Id == d.ProductoId) ?? throw new KeyNotFoundException("Bebida inexistente.");
-                    if (b.Stock < d.Cantidad) throw new InvalidOperationException("Stock insuficiente de bebida.");
+                    bebidasRequeridas[b.Id] = bebidasRequeridas.GetValueOrDefault(b.Id) + d.Cantidad;
                     d.Nombre = b.Nombre; d.Precio = b.Precio * 1.15m;
                 }
                 else
@@ -30,14 +33,17 @@ namespace Ejercicio04_Cafeteria.Servicios
                     d.Nombre = p.Nombre; d.Precio = r.Ingredientes.Sum(x => x.Cantidad * (ingredientes.First(i => i.Id == x.IngredienteId).Costo)) * 2m;
                 }
             }
-            if (requeridos.Any(x => ingredientes.FirstOrDefault(i => i.Id == x.Key)?.Stock < x.Value)) throw new InvalidOperationException("Stock insuficiente de ingredientes.");
+            if (bebidasRequeridas.Any(x => bebidas.First(b => b.Id == x.Key).Stock < x.Value)) throw new InvalidOperationException("Stock insuficiente de bebida.");
+            if (requeridos.Any(x => ingredientes.FirstOrDefault(i => i.Id == x.Key) is not { } ingrediente || ingrediente.Stock < x.Value)) throw new InvalidOperationException("Stock insuficiente de ingredientes.");
             var copiaIngredientes = ingredientes.Select(Copiar).ToList(); var copiaBebidas = bebidas.Select(Copiar).ToList(); var copiaVentas = Listar(); var copiaMov = Archivo.Leer<Movimiento>("movimientos.json");
             try
             {
-                foreach (var req in requeridos) { var i = ingredientes.First(x => x.Id == req.Key); i.Stock -= req.Value; var m = Archivo.Leer<Movimiento>("movimientos.json"); m.Add(new Movimiento { Id = m.Count == 0 ? 1 : m.Max(x => x.Id) + 1, IngredienteId = i.Id, Tipo = "Salida", Cantidad = req.Value, StockAnterior = i.Stock + req.Value, StockNuevo = i.Stock, Fecha = DateTime.Now, Descripcion = "Venta" }); Archivo.Guardar("movimientos.json", m); }
-                foreach (var d in detalles.Where(x => x.Tipo.Equals("Bebida", StringComparison.OrdinalIgnoreCase))) bebidas.First(x => x.Id == d.ProductoId).Stock -= d.Cantidad;
+                var movimientos = copiaMov.ToList();
+                var siguienteId = movimientos.Count == 0 ? 1 : movimientos.Max(x => x.Id) + 1;
+                foreach (var req in requeridos) { var i = ingredientes.First(x => x.Id == req.Key); var anterior = i.Stock; i.Stock -= req.Value; movimientos.Add(new Movimiento { Id = siguienteId++, IngredienteId = i.Id, Tipo = "Salida", Cantidad = req.Value, StockAnterior = anterior, StockNuevo = i.Stock, Fecha = DateTime.Now, Descripcion = "Venta" }); }
+                foreach (var req in bebidasRequeridas) bebidas.First(x => x.Id == req.Key).Stock -= req.Value;
                 var venta = new Venta { Id = copiaVentas.Count == 0 ? 1 : copiaVentas.Max(x => x.Id) + 1, Fecha = DateTime.Now, Detalles = detalles, Total = detalles.Sum(x => x.Cantidad * x.Precio) };
-                Archivo.Guardar("ingredientes.json", ingredientes); Archivo.Guardar("bebidas.json", bebidas); copiaVentas.Add(venta); Archivo.Guardar("ventas.json", copiaVentas); return venta;
+                Archivo.Guardar("ingredientes.json", ingredientes); Archivo.Guardar("bebidas.json", bebidas); Archivo.Guardar("movimientos.json", movimientos); copiaVentas.Add(venta); Archivo.Guardar("ventas.json", copiaVentas); return venta;
             }
             catch
             {

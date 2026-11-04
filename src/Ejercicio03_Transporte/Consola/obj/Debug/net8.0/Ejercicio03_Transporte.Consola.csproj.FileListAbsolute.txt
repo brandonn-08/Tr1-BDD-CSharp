@@ -1,4 +1,0 @@
-C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net8.0\Ejercicio03_Transporte.Consola.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net8.0\Ejercicio03_Transporte.Consola.AssemblyInfoInputs.cache
-C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net8.0\Ejercicio03_Transporte.Consola.AssemblyInfo.cs
-C:\Users\AMERICAN\Downloads\Tr1-BDD-CSharp-main\Tr1-BDD-CSharp-main\src\Ejercicio03_Transporte\Consola\obj\Debug\net8.0\Ejercicio03_Transporte.Consola.csproj.CoreCompileInputs.cache

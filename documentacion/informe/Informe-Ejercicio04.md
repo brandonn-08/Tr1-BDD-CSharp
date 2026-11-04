@@ -8,4 +8,6 @@ Las pruebas automáticas se encuentran en `pruebas/Ejercicio04_Cafeteria/`. El r
 
 ## Bitácora de apoyo de IA
 
-Se utilizó IA para revisar el flujo de venta y detectar que las cantidades de una misma bebida debían sumarse antes de validar el stock. También ayudó a preparar las pruebas de venta completa y a corregir el filtro de fechas del reporte. Esta sección documenta el apoyo recibido en esas correcciones; el integrante debe revisarla y completarla con su experiencia real antes de incorporarla al informe grupal.
+1. **`VentaService.Registrar`:** Se usó IA para entender cómo sumar las cantidades cuando una misma bebida aparece varias veces en una venta. Con esa lógica se valida el stock total antes de descontarlo y se evita guardar una venta incompleta.
+2. **`ReporteVentas.Obtener`:** Se usó IA para entender el filtro de fechas. El reporte debía incluir las ventas realizadas durante todo el último día seleccionado y rechazar un período con las fechas invertidas.
+3. **`Program.RegistrarVenta`:** Se usó IA para revisar el ciclo que pide los productos de una venta. La cantidad de productos se lee una sola vez antes del ciclo, para que el programa no vuelva a pedirla en cada vuelta.

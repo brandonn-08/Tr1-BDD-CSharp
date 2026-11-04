@@ -53,7 +53,7 @@ namespace Ejercicio03_Transporte.Servicios
             }
 
             // Regla estricta del enunciado: No se elimina un viaje que tenga boletos vendidos activos.
-            bool tieneBoletosActivos = Boletos.Any(b => b.IdViaje == idViaje && !b.EstaAnulado);
+            bool tieneBoletosActivos = Boletos.Any(b => b.IdViaje == idViaje);
             if (tieneBoletosActivos)
             {
                 mensaje = "No se puede eliminar el viaje porque tiene boletos vendidos activos.";

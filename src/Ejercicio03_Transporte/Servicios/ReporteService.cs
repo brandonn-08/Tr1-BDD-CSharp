@@ -37,7 +37,7 @@ namespace Ejercicio03_Transporte.Servicios
             Console.WriteLine();
         }
 
-        // 2. Recaudación por ruta en un período
+             // 2. Recaudación por ruta en un período
         public void GenerarRecaudacionPorRuta(DateTime fechaInicio, DateTime fechaFin)
         {
             Console.WriteLine($"\n========================================");
@@ -47,17 +47,19 @@ namespace Ejercicio03_Transporte.Servicios
             var boletosValidos = _gestionService.Boletos
                 .Where(b => !b.EstaAnulado && b.FechaEmision >= fechaInicio && b.FechaEmision <= fechaFin);
 
-            var rutasGrupos = boletosValidos.GroupBy(b => b.IdViaje);
+            var porRuta = boletosValidos
+                .Select(b => new { Boleto = b, Viaje = _gestionService.Viajes.FirstOrDefault(v => v.IdViaje == b.IdViaje) })
+                .Where(x => x.Viaje != null)
+                .GroupBy(x => $"{x.Viaje!.Origen} -> {x.Viaje!.Destino}");
 
-            foreach (var grupo in rutasGrupos)
+            decimal totalGeneral = 0;
+            foreach (var grupo in porRuta)
             {
-                var viaje = _gestionService.Viajes.FirstOrDefault(v => v.IdViaje == grupo.Key);
-                if (viaje != null)
-                {
-                    decimal totalRecaudado = grupo.Sum(b => b.PrecioFinal);
-                    Console.WriteLine($"Ruta: {viaje.Origen} -> {viaje.Destino} (Viaje ID: {viaje.IdViaje}) | Total: ${totalRecaudado:F2} ({grupo.Count()} boletos)");
-                }
+                decimal total = grupo.Sum(x => x.Boleto.PrecioFinal);
+                totalGeneral += total;
+                Console.WriteLine($"Ruta: {grupo.Key} | Total: ${total:F2} ({grupo.Count()} boletos)");
             }
+            Console.WriteLine($"TOTAL RECAUDADO: ${totalGeneral:F2}");
         }
 
         // 3. Porcentaje de ocupación de cada viaje
@@ -84,7 +86,7 @@ namespace Ejercicio03_Transporte.Servicios
             Console.WriteLine($"========================================");
 
             var anulados = _gestionService.Boletos
-                .Where(b => b.EstaAnulado && b.FechaEmision >= fechaInicio && b.FechaEmision <= fechaFin);
+                .Where(b => b.EstaAnulado && b.FechaAnulacion.HasValue && b.FechaAnulacion.Value >= fechaInicio && b.FechaAnulacion.Value <= fechaFin);
 
             int contador = 0;
             foreach (var b in anulados)

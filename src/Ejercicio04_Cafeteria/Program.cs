@@ -57,7 +57,7 @@ static void MenuPlatos(PlatoService s)
 {
     Console.WriteLine("1. Listar  2. Registrar  3. Asignar receta");
     var opcion = Console.ReadLine();
-    try { if (opcion == "1") foreach (var x in s.Listar()) Console.WriteLine($"{x.Id}: {x.Nombre}"); else if (opcion == "2") s.Registrar(new Plato { Nombre = LeerTexto("Nombre") }); else if (opcion == "3") { var r = new Receta { PlatoId = LeerEntero("Id del plato") }; for (var i = 0; i < LeerEntero("Cantidad de ingredientes"); i++) r.Ingredientes.Add(new DetalleReceta { IngredienteId = LeerEntero("Id ingrediente"), Cantidad = LeerDecimal("Cantidad") }); s.AsignarReceta(r); Console.WriteLine("Receta guardada."); } } catch (Exception e) { Console.WriteLine(e.Message); }
+    try { if (opcion == "1") foreach (var x in s.Listar()) Console.WriteLine($"{x.Id}: {x.Nombre}"); else if (opcion == "2") s.Registrar(new Plato { Nombre = LeerTexto("Nombre") }); else if (opcion == "3") { var r = new Receta { PlatoId = LeerEntero("Id del plato") }; var cantidad = LeerEntero("Cantidad de ingredientes"); for (var i = 0; i < cantidad; i++) r.Ingredientes.Add(new DetalleReceta { IngredienteId = LeerEntero("Id ingrediente"), Cantidad = LeerDecimal("Cantidad") }); s.AsignarReceta(r); Console.WriteLine("Receta guardada."); } } catch (Exception e) { Console.WriteLine(e.Message); }
 }
 
 static void MenuBebidas(BebidaService s)
@@ -69,18 +69,19 @@ static void MenuBebidas(BebidaService s)
 
 static void RegistrarAbastecimiento(IngredienteService si, BebidaService sb, AbastecimientoService sa)
 {
-    try { var tipo = LeerTexto("Tipo (Ingrediente/Bebida)"); if (tipo.Equals("Ingrediente", StringComparison.OrdinalIgnoreCase)) { var i = si.Buscar(LeerEntero("Id")) ?? throw new KeyNotFoundException("No existe."); sa.RegistrarIngrediente(i, LeerDecimal("Cantidad"), LeerDecimal("Costo de compra")); si.Actualizar(i); } else { var b = sb.Buscar(LeerEntero("Id")) ?? throw new KeyNotFoundException("No existe."); sa.RegistrarBebida(b, LeerEntero("Cantidad"), LeerDecimal("Costo")); sb.Actualizar(b); } Console.WriteLine("Abastecimiento registrado."); } catch (Exception e) { Console.WriteLine(e.Message); }
+    try { var tipo = LeerTexto("Tipo (Ingrediente/Bebida)"); if (tipo.Equals("Ingrediente", StringComparison.OrdinalIgnoreCase)) { var i = si.Buscar(LeerEntero("Id")) ?? throw new KeyNotFoundException("No existe."); sa.RegistrarIngrediente(i, LeerDecimal("Cantidad"), LeerDecimal("Costo de compra")); si.Actualizar(i); } else if (tipo.Equals("Bebida", StringComparison.OrdinalIgnoreCase)) { var b = sb.Buscar(LeerEntero("Id")) ?? throw new KeyNotFoundException("No existe."); sa.RegistrarBebida(b, LeerEntero("Cantidad"), LeerDecimal("Costo")); sb.Actualizar(b); } else throw new ArgumentException("El tipo debe ser Ingrediente o Bebida."); Console.WriteLine("Abastecimiento registrado."); } catch (Exception e) { Console.WriteLine(e.Message); }
 }
 
 static void RegistrarVenta(VentaService s)
 {
-    try { var detalles = new List<DetalleVenta>(); for (var i = 0; i < LeerEntero("Cantidad de productos"); i++) detalles.Add(new DetalleVenta { ProductoId = LeerEntero("Id producto"), Tipo = LeerTexto("Tipo (Plato/Bebida)"), Cantidad = LeerEntero("Cantidad") }); var v = s.Registrar(detalles); Console.WriteLine($"Venta {v.Id} registrada. Total: {v.Total:F2}"); } catch (Exception e) { Console.WriteLine(e.Message); }
+    try { var detalles = new List<DetalleVenta>(); var cantidad = LeerEntero("Cantidad de productos"); for (var i = 0; i < cantidad; i++) detalles.Add(new DetalleVenta { ProductoId = LeerEntero("Id producto"), Tipo = LeerTexto("Tipo (Plato/Bebida)"), Cantidad = LeerEntero("Cantidad") }); var v = s.Registrar(detalles); Console.WriteLine($"Venta {v.Id} registrada. Total: {v.Total:F2}"); } catch (Exception e) { Console.WriteLine(e.Message); }
 }
 
 static void MenuReportes(PlatoService platos)
 {
     Console.WriteLine("1. Platos  2. Compras  3. Preparación  4. Ventas");
-    switch (Console.ReadLine()) { case "1": new ReportePlatos().Mostrar(platos); break; case "2": new ReporteCompras().Mostrar(); break; case "3": new ReportePreparacion().Mostrar(); break; case "4": new ReporteVentas().Mostrar(LeerFecha("Inicio"), LeerFecha("Fin")); break; }
+    try { switch (Console.ReadLine()) { case "1": new ReportePlatos().Mostrar(platos); break; case "2": new ReporteCompras().Mostrar(); break; case "3": new ReportePreparacion().Mostrar(); break; case "4": new ReporteVentas().Mostrar(LeerFecha("Inicio"), LeerFecha("Fin")); break; } }
+    catch (Exception e) { Console.WriteLine(e.Message); }
 }
 
 static string LeerTexto(string mensaje) { Console.Write($"{mensaje}: "); return Console.ReadLine()?.Trim() ?? ""; }

@@ -1,0 +1,115 @@
+classDiagram
+    class Socio {
+        +int Id
+        +string Nombre
+    }
+
+    class Cuenta {
+        <<abstract>>
+        +int Numero
+        +int SocioId
+        +decimal Saldo
+        +bool Activa
+        +DateOnly Apertura
+        +PermiteSaldo(decimal nuevoSaldo) bool
+        +InteresMensual() decimal
+    }
+
+    class CuentaAhorro {
+        +PermiteSaldo(decimal nuevoSaldo) bool
+        +InteresMensual() decimal
+    }
+
+    class CuentaCorriente {
+        +PermiteSaldo(decimal nuevoSaldo) bool
+        +InteresMensual() decimal
+    }
+
+    class Movimiento {
+        +int Id
+        +int CuentaNumero
+        +DateOnly Fecha
+        +string Tipo
+        +decimal Monto
+        +decimal SaldoPosterior
+        +string Detalle
+        +string TransferenciaId
+    }
+
+    class DatosCooperativa {
+        +List~Socio~ Socios
+        +List~Cuenta~ Cuentas
+        +List~Movimiento~ Movimientos
+    }
+
+    class Cooperativa {
+        -DatosCooperativa datos
+        -ArchivoJson archivo
+        +Cooperativa(string ruta)
+        +AgregarSocio(int id, string nombre) void
+        +AbrirCuenta(int numero, int socio, bool ahorro, DateOnly fecha) void
+        +Depositar(int numero, decimal monto, DateOnly fecha) void
+        +Retirar(int numero, decimal monto, DateOnly fecha) void
+        +Transferir(int socio, int origen, int destino, decimal monto, DateOnly fecha) void
+        +AplicarIntereses(int anio, int mes) void
+        +CerrarCuenta(int numero) void
+        +Consultar() DatosCooperativa
+    }
+
+    class ArchivoJson {
+        +string Ruta
+        +ArchivoJson(string ruta)
+        +Cargar() DatosCooperativa
+        +Guardar(DatosCooperativa datos) void
+        +Copiar(DatosCooperativa datos) DatosCooperativa$
+    }
+
+    class ReportesCooperativa {
+        +EstadoCuenta(DatosCooperativa d, int numero) List~Movimiento~$
+        +InteresesMes(DatosCooperativa d, int anio, int mes) List~InteresCuenta~$
+        +Sobregiros(DatosCooperativa d) List~Cuenta~$
+        +Totales(DatosCooperativa d, DateOnly desde, DateOnly hasta) TotalesPeriodo$
+        +Auditar(DatosCooperativa d) List~AuditoriaCuenta~$
+    }
+
+    class InteresCuenta {
+        +int Cuenta
+        +decimal Saldo
+        +decimal Calculado
+        +decimal Acreditado
+        +bool Aplicado
+    }
+
+    class TotalesPeriodo {
+        +decimal Depositado
+        +decimal Retirado
+    }
+
+    class AuditoriaCuenta {
+        +int Cuenta
+        +decimal Guardado
+        +decimal Calculado
+        +bool HistorialCorrecto
+        +bool Correcta
+    }
+
+    Cuenta <|-- CuentaAhorro
+    Cuenta <|-- CuentaCorriente
+
+    Socio "1" --> "0..*" Cuenta : posee
+    Cuenta "1" --> "0..*" Movimiento : registra
+
+    DatosCooperativa o-- "0..*" Socio : socios
+    DatosCooperativa o-- "0..*" Cuenta : cuentas
+    DatosCooperativa o-- "0..*" Movimiento : movimientos
+
+    Cooperativa --> ArchivoJson : guarda y carga
+    Cooperativa --> DatosCooperativa : administra
+
+    ArchivoJson ..> DatosCooperativa : serializa
+    ReportesCooperativa ..> DatosCooperativa : consulta
+    ReportesCooperativa ..> Movimiento : devuelve
+    ReportesCooperativa ..> Cuenta : devuelve
+    ReportesCooperativa ..> InteresCuenta : genera
+    ReportesCooperativa ..> TotalesPeriodo : genera
+    ReportesCooperativa ..> AuditoriaCuenta : genera

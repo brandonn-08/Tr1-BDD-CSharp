@@ -1,0 +1,24 @@
+{
+  "Comunidades": [],
+  "Emprendedores": [],
+  "TiposArtesanias": [
+    {
+      "Id": "f1f1836d-e6d2-4826-99bf-b35f4c6de4a0",
+      "Nombre": "Textiles",
+      "PorcentajeComision": 20,
+      "Descripcion": "Artesan\u00EDas elaboradas con tejidos.",
+      "Activo": true
+    },
+    {
+      "Id": "c3c9696c-1f04-4576-93bc-c5d5517959a9",
+      "Nombre": "Tallas en madera",
+      "PorcentajeComision": 25,
+      "Descripcion": "Artesan\u00EDas elaboradas mediante tallado de madera.",
+      "Activo": true
+    }
+  ],
+  "Artesanias": [],
+  "Recepciones": [],
+  "Ventas": [],
+  "Devoluciones": []
+}

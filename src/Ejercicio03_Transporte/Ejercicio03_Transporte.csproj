@@ -1,17 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <!-- Usar el menu de Transporte y excluir los archivos generados del proyecto anidado. -->
-    <Compile Remove="Program.cs" />
-    <Compile Remove="Consola\**\*.cs" />
-    <Compile Include="Consola\Program.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Consola\**" />
+		<Compile Remove="bin\**" />
+		<Compile Remove="obj\**" />
+	</ItemGroup>
 
 </Project>
